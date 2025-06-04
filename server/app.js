@@ -1,6 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const db= require('./db/dbConfig');
+// dbConnection.connect((err)=>{
+//   if (err){
+//     console.log(err)
+//   }
+//   console.log("database connected")
+// })
 
 // Initialize Express
 const app = express();
