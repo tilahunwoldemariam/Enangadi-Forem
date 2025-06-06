@@ -4,45 +4,76 @@ const jwt = require('jsonwebtoken');
 const dbConnection = require('../db/dbConfig');
 const {StatusCodes} = require('http-status-codes');
 // for registration
+
+  async function createTable(req, res) {
+    
+    let userTable = `CREATE TABLE users(
+  userId INT(20) NOT NULL AUTO_INCREMENT,
+  username VARCHAR(20) NOT NULL,
+  firstname VARCHAR(20) NOT NULL,
+  lastname VARCHAR(20) NOT NULL,
+  email VARCHAR(30) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  PRIMARY KEY(userId)
+  
+)`;
+
+try {
+  await dbConnection.query(userTable);
+  console.log("User table created");res.end("Tables created successfully");
+} catch (error) {
+  console.error(`Error creating tables: ${error.message}`);
+  res.status(500).send("Error creating tables");
+}
+
+}
+
 async function register(req, res) {
   const { username, firstname, lastname, email, password } = req.body;
-
-  if (!username || !email || !firstname || !lastname || !password) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Please provide full information" });
-  }
-
   try {
     const [user] = await dbConnection.query(
-      "SELECT username, userid,firstname, lastname, email ,password FROM users WHERE username=? OR email=?",
+      "select username, userId from users where username=? or email=?",
       [username, email]
     );
-
     if (user.length > 0) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ msg: "User already exists" });
+      return res.status(StatusCodes.CONFLICT).json({
+        error: "Conflict",
+        msg: "User already existed",
+      });
     }
 
-    if (password.length <= 7) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ msg: "Password must be at least 8 characters" });
+    if (!username || !email || !firstname || !lastname || !password) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: "Bad Request",
+        msg: "Please, provide full information",
+      });
     }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedpswrd = await bcrypt.hash(password, salt);
-
-    const [result] = await dbConnection.query(
-      "INSERT INTO users(username, firstname, lastname, email, password) VALUES (?,?,?,?,?)",
-      [username, firstname, lastname, email, hashedpswrd]
+    if(password.length <= 8){
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        "msg": "password length should be at least 8 character"
+      })
+    }
+    const genString =await bcrypt.genSalt(10);
+    // console.log(genString);
+    const hashedPswrd = await bcrypt.hash(password, genString )
+    // console.log(hashedPswrd);
+  
+    await dbConnection.query(
+      `INSERT INTO users (username, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)`,
+      [username, firstname, lastname, email, hashedPswrd]
     );
-
-    const token = jwt.sign({ id: result.insertId }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    return res.status(StatusCodes.CREATED).json({ msg: "You are successfully registered", token });
+    // Continue with saving to DB here...
+    return res
+      .status(StatusCodes.CREATED)
+      .json({ msg: "User registered successfully" });
   } catch (error) {
-    console.error(error.message);
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: "Something went wrong, try later" });
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: "Server Error",
+      msg: error.message,
+    });
   }
-}
+};
+  
 
 // for login
   async function loginUser (req, res) {
@@ -97,4 +128,5 @@ async function forgotPassword(req, res) {
   return res.status(200).json({ message: "Password reset link sent (mock)" });
 }
 
-module.exports = { loginUser, register, forgotPassword};
+module.exports = { createTable,loginUser, register, forgotPassword};
+ 
