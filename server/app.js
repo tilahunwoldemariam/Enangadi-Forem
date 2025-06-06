@@ -3,7 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const dbConnection= require("./db/dbConfig")
 
-const router = require('./routes/userRoute.js');
 // Initialize Express
 const app = express();
 const port = 8000;
@@ -38,5 +37,3 @@ async function dbstart() {
   
 }
 dbstart();
-
-

@@ -1,15 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const { loginUser ,forgotPassword, register} = require('../controller/userController');
+const { loginUser ,forgotPassword,createTable, register} = require('../controller/userController');
 // const authMidleWare = require('../middleware/authMiddleware');
 
-const {
-  createTable,
-  register,
- loginUser,
- forgotPassword,
-} = require("../controller/userController");
+
 //create database table
 router.get("/create-table", createTable);
 //register route
