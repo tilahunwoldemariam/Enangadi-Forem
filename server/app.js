@@ -17,7 +17,10 @@ app.get("/create-table", createTable);
 //user middle ware{
  const userRoute = require("./routes/userRoute")
  app.use("/api/users", userRoute);
+//  question middleware
 
+const questionRoute = require("./routes/questionRoute")
+app.use("/api/questions", questionRoute)
 
 // Test the backend listening
 app.get('/', (req, res) => {
@@ -38,4 +41,7 @@ async function dbstart() {
 }
 dbstart();
 
-
+// app.listen(8000, (err)=>{
+//   console.log(err)
+//   console
+// })
