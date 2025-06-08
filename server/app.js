@@ -21,6 +21,9 @@ const { createTable, register } = require("./controller/userController");
 const questionRoute = require("./routes/questionRoute")
 app.use("/api/questions", questionRoute)
 
+const answerRoute = require("./routes/answerRoute")
+app.use("/api/answers", answerRoute)
+
 // Test the backend listening
 app.get('/', (req, res) => {
   res.send('Welcome to the Evangadi Forum API');

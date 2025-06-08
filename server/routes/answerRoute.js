@@ -56,21 +56,14 @@ const dbConnection = require("../db/dbConfig")
 
 const express = require('express');
 const router = express.Router();
-const Answer = require('../models/Answer');
+const authMiddleware = require('../middleware/authMiddleware');
+const { postAnswers } = require('../controller/answersController');
+router.post('/postanswer', authMiddleware, postAnswers);
+const { getAllAnswer } = require('../controller/answersController');
+router.get('/:question_Id', authMiddleware, getAllAnswer);
 
-// GET /api/answers/:questionId
-router.get('/:questionId', async (req, res) => {
-  try {
-    const answers = await Answer.find({ questionId: req.params.questionId });
-    if (!answers.length) {
-      return res.status(404).json({ message: 'No answers found for this question' });
-    }
-    res.json(answers);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error retrieving answers' });
-  }
-});
+
+
 
 module.exports = router;
  
