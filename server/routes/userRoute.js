@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-//authorization middleware
-// const authMidleWare = require("../middleware/authMiddleware");
-//use from uusercontroller
+
 const {
   createTable,
   register,
