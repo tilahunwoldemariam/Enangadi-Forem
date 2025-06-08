@@ -6,6 +6,7 @@ const router = express.Router();
 const {
   createTable,
   register,
+  loginUser,
  
 } = require("../controller/userController");
 //create database table
@@ -13,7 +14,7 @@ router.get("/create-table", createTable);
 //register route
 router.post("/register", register);
 //login route
-// router.post("/login", login);
+router.post("/login", loginUser);
 //user check router
 // router.get("/check", authMidleWare, check);
 
