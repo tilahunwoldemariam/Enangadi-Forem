@@ -268,3 +268,5 @@ POST /api/questions
 * All request/response formats are in JSON.
 * Protected endpoints require JWT tokens via `Authorization` header.
 * Ensure MySQL tables exist: `users`, `questions`, `answers`.
+
+           ****HAPPY HACKING!!****
