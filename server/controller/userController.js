@@ -1,7 +1,7 @@
  const dbConnection = require("../db/dbConfig")
  const { StatusCodes } = require("http-status-codes");
  const bcrypt = require("bcrypt")
-
+const jwt = require("jsonwebtoken");
   async function createTable(req, res) {
     
     let userTable = `CREATE TABLE users(
@@ -70,6 +70,49 @@ async function register(req, res) {
     });
   }
 };
+
+
+
+async function loginUser(req, res) {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({
+      error: "Bad Request",
+      message: "Please provide all required fields!",
+    });
+  }
+  try {
+    const [user] = await dbConnection.query(
+      "SELECT userid, username, password FROM users WHERE email = ?",
+      [email]
+    );
+    if (user.length === 0) {
+      return res.status(401).json({
+        error: "Unauthorized",
+        message: "Invalid credential",
+      });
+    }
+    const isMatch = await bcrypt.compare(password, user[0].password);
+    if (!isMatch) {
+      return res.status(401).json({
+        error: "Unauthorized",
+        message: "Invalid password",
+      });
+    }
+    const username = user[0].username;
+    const userid = user[0].userid;
+    const token = jwt.sign({ username, userid }, "secret", {
+      expiresIn: "1h",
+    });
+    res.status(200).json({
+      message: "User login successful",
+      token,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+    console.error(err.message);
+  }
+}
   
 
- module.exports={createTable,register }
+ module.exports = { createTable, register, loginUser };
