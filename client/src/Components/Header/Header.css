@@ -2,48 +2,44 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
+    padding: 15px 50px;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     flex-wrap: wrap;
   }
   
   .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
+    padding: 10px 0;
     display: flex;
     align-items: center;
   }
-  
-  .logo-orange {
-    color: orange;
-  }
-  
-  .logo-black {
-    color: black;
-    margin-left: 2px;
+  .logo img{
+    width: 300px;
   }
   
   .nav-links {
     display: flex;
-    gap: 15px;
+    gap: 20px;
   }
   
   .nav-links a {
     text-decoration: none;
     color: black;
-    font-size: 0.9rem;
+    font-size: 1.2rem;
   }
   
   .auth-button .btn {
     background-color: #3b82f6;
     color: white;
-    padding: 6px 14px;
+    padding: 6px 50px;
     border: none;
     border-radius: 5px;
     text-decoration: none;
     font-weight: 500;
     cursor: pointer;
+  }
+  .auth-button .btn:hover{
+    background: #FF8500;
   }
   
   @media (max-width: 768px) {
@@ -54,6 +50,7 @@
   
     .nav-links {
       margin-top: 10px;
+      display: none;
     }
   
     .auth-button {
