@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const dbConnection= require("./db/dbConfig")
+// authentication middleware
+const authMiddleware = require('./middleware/authMiddleware');
 
 // Initialize Express
 const app = express();
@@ -12,30 +14,29 @@ app.use(cors());
 //json middleware to extract json data
 app.use(express.json());
 
-const { createTable, register } = require("./controller/userController");
-app.get("/create-table", createTable);
-//user middle ware{
- const userRoute = require("./routes/userRoute")
- app.use("/api/users", userRoute);
+// User routes middleware
+const userRoutes = require('./routes/userRoute');
+app.use('/api/users', userRoutes);
 
+// Question routes middleware
+const questionRoutes = require('./routes/questionRoute');
 
-// Test the backend listening
-app.get('/', (req, res) => {
-  res.send('Welcome to the Evangadi Forum API');
-});
-async function dbstart() {
+app.use('/api/questions', authMiddleware,  questionRoutes);
+
+// Answer routes middleware
+const answerRoutes = require('./routes/answerRoute');
+app.use('/api/answers', authMiddleware, answerRoutes);
+
+async function start() {
   try {
-    await dbConnection.execute("select 'test'")
-    app.listen(port)
-    console.log("dbconnected");
-    console.log(` Server is running on port http://localhost:${port}`);
-    
-  } catch (error) {
-    console.log(error.message);
-    
+    const res = await dbConnection.execute("SELECT 'test'");
+    app.listen(port, () => {
+      console.log(`✅ Server is running on port http://localhost:${port}`);
+    });
+    console.log('✅ Successfully connected to MySQL Database');
+} catch (error) {
+  console.error('❌ Error setting up the server:', error.message);
   }
-  
 }
-dbstart();
 
-
+start();

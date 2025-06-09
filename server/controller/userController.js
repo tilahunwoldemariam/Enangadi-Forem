@@ -1,75 +1,59 @@
- const dbConnection = require("../db/dbConfig")
- const { StatusCodes } = require("http-status-codes");
- const bcrypt = require("bcrypt")
-
-  async function createTable(req, res) {
-    
-    let userTable = `CREATE TABLE users(
-  userId INT(20) NOT NULL AUTO_INCREMENT,
-  username VARCHAR(20) NOT NULL,
-  firstname VARCHAR(20) NOT NULL,
-  lastname VARCHAR(20) NOT NULL,
-  email VARCHAR(30) NOT NULL,
-  password VARCHAR(100) NOT NULL,
-  PRIMARY KEY(userId)
-  
-)`;
-
-try {
-  await dbConnection.query(userTable);
-  console.log("User table created");res.end("Tables created successfully");
-} catch (error) {
-  console.error(`Error creating tables: ${error.message}`);
-  res.status(500).send("Error creating tables");
-}
-
-}
+const dbConnection = require("../db/dbConfig");
+const { StatusCodes } = require("http-status-codes");
+const bcrypt = require("bcrypt");
 
 async function register(req, res) {
+  // Logic for user registration
   const { username, firstname, lastname, email, password } = req.body;
+
+  if (!username || !firstname || !lastname || !email || !password) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "All fields are required" });
+  }
+
   try {
-    const [user] = await dbConnection.query(
-      "select username, userId from users where username=? or email=?",
+    const [existingUser] = await dbConnection.query(
+      "SELECT username, userid FROM users WHERE username = ? or email= ?",
       [username, email]
     );
-    if (user.length > 0) {
-      return res.status(StatusCodes.CONFLICT).json({
-        error: "Conflict",
-        msg: "User already existed",
-      });
+    if (existingUser.length > 0) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ msg: "User already registered" });
     }
 
-    if (!username || !email || !firstname || !lastname || !password) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        error: "Bad Request",
-        msg: "Please, provide full information",
-      });
+    if (password.length < 8) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ msg: "Password must be at least 8 characters long" });
     }
-    if(password.length <= 8){
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        "msg": "password length should be at least 8 character"
-      })
+
+    // Hash the password (assuming you have a hashing function)
+    const salt = await bcrypt.genSalt(10);
+    if (!salt) {
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ msg: "Error generating salt for password hashing" });
     }
-    const genString =await bcrypt.genSalt(10);
-    // console.log(genString);
-    const hashedPswrd = await bcrypt.hash(password, genString )
-    // console.log(hashedPswrd);
-  
+
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     await dbConnection.query(
-      `INSERT INTO users (username, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)`,
-      [username, firstname, lastname, email, hashedPswrd]
+      "INSERT INTO users (username, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)",
+      [username, firstname, lastname, email, hashedPassword]
     );
-    // Continue with saving to DB here...
+
     return res
       .status(StatusCodes.CREATED)
       .json({ msg: "User registered successfully" });
   } catch (error) {
+    console.error("Error during registration:", error.message);
+
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      error: "Server Error",
-      msg: error.message,
+      msg: "Something went wrong during registration, please try again later.",
     });
   }
-};
-  
+}
 
- module.exports={createTable,register }
+module.exports = { createTable, register };

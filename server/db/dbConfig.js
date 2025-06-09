@@ -10,16 +10,16 @@ const dbConnection = mysql.createPool({
 });
 
 // 2. Test connection (callback style)
-// dbConnection.execute("select 'test' ", (err, result) => {
-//   // If there is an error, log it and exit
-//   if (err) {
-//     console.error('❌ Failed to connect to MySQL Database');
-//     console.error('Error details:', err.message);
-//     return;
-//   }
+dbConnection.execute("select 'test' ", (err, result) => {
+  // If there is an error, log it and exit
+  if (err) {
+    console.error('❌ Failed to connect to MySQL Database');
+    console.error('Error details:', err.message);
+    return;
+  }
 
-//   console.log('✅ Successfully connected to MySQL Database result: ', result);
-// });
+  console.log('✅ Successfully connected to MySQL Database result: ', result);
+});
 
 // tile test
 // 3. Export for team usage
