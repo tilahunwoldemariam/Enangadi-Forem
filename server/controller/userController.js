@@ -1,59 +1,103 @@
-const dbConnection = require("../db/dbConfig");
-const { StatusCodes } = require("http-status-codes");
-const bcrypt = require("bcrypt");
+const dbConnection = require('../db/dbConfig');
+const { StatusCodes } = require('http-status-codes');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 async function register(req, res) {
   // Logic for user registration
   const { username, firstname, lastname, email, password } = req.body;
-
-  if (!username || !firstname || !lastname || !email || !password) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "All fields are required" });
-  }
-
   try {
-    const [existingUser] = await dbConnection.query(
-      "SELECT username, userid FROM users WHERE username = ? or email= ?",
+    const [user] = await dbConnection.query(
+      'select username, userId from users where username=? or email=?',
       [username, email]
     );
-    if (existingUser.length > 0) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ msg: "User already registered" });
+    if (user.length > 0) {
+      return res.status(StatusCodes.CONFLICT).json({
+        error: 'Conflict',
+        msg: 'User already existed',
+      });
     }
 
-    if (password.length < 8) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ msg: "Password must be at least 8 characters long" });
+    if (!username || !email || !firstname || !lastname || !password) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'Bad Request',
+        msg: 'Please, provide full information',
+      });
     }
-
-    // Hash the password (assuming you have a hashing function)
-    const salt = await bcrypt.genSalt(10);
-    if (!salt) {
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ msg: "Error generating salt for password hashing" });
+    if (password.length <= 8) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        msg: 'password length should be at least 8 character',
+      });
     }
-
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const genString = await bcrypt.genSalt(10);
+    // console.log(genString);
+    const hashedPswrd = await bcrypt.hash(password, genString);
+    // console.log(hashedPswrd);
 
     await dbConnection.query(
-      "INSERT INTO users (username, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)",
-      [username, firstname, lastname, email, hashedPassword]
+      `INSERT INTO users (username, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)`,
+      [username, firstname, lastname, email, hashedPswrd]
     );
-
+    // Continue with saving to DB here...
     return res
       .status(StatusCodes.CREATED)
-      .json({ msg: "User registered successfully" });
+      .json({ msg: 'User registered successfully' });
   } catch (error) {
-    console.error("Error during registration:", error.message);
-
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      msg: "Something went wrong during registration, please try again later.",
+      error: 'Server Error',
+      msg: error.message,
     });
   }
 }
 
-module.exports = { createTable, register };
+async function loginUser(req, res) {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: 'Please provide all required fields!',
+    });
+  }
+  try {
+    const [user] = await dbConnection.query(
+      'SELECT userid, username, password FROM users WHERE email = ?',
+      [email]
+    );
+    if (user.length === 0) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Invalid credential',
+      });
+    }
+    const isMatch = await bcrypt.compare(password, user[0].password);
+    if (!isMatch) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Invalid password',
+      });
+    }
+    const username = user[0].username;
+    const userid = user[0].userid;
+    const token = jwt.sign({ username, userid }, 'secret', {
+      expiresIn: '1h',
+    });
+    res.status(200).json({
+      message: 'User login successful',
+      token,
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+    console.error(err.message);
+  }
+}
+
+async function checkUser(req, res) {
+  // Logic to check user status
+  const { username, userid } = req.user; // Extract user info from request object
+
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: 'User is authenticated', username, userid });
+}
+
+module.exports = { register, loginUser, checkUser };

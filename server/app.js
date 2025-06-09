@@ -1,18 +1,24 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const dbConnection= require("./db/dbConfig")
+// db connection
+const dbConnection = require('./db/dbConfig');
+
 // authentication middleware
 const authMiddleware = require('./middleware/authMiddleware');
 
 // Initialize Express
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 // Middleware
 app.use(cors());
-//json middleware to extract json data
 app.use(express.json());
+
+// Test the backend listening
+app.get('/', (req, res) => {
+  res.send('Welcome to the Evangadi Forum API');
+});
 
 // User routes middleware
 const userRoutes = require('./routes/userRoute');
@@ -20,7 +26,6 @@ app.use('/api/users', userRoutes);
 
 // Question routes middleware
 const questionRoutes = require('./routes/questionRoute');
-
 app.use('/api/questions', authMiddleware,  questionRoutes);
 
 // Answer routes middleware
@@ -40,3 +45,11 @@ async function start() {
 }
 
 start();
+
+// app.listen(port, (err) => {
+//   if (err) {
+//     console.error(`❌ Failed to start the server on port ${port}`);
+//   }
+
+//   console.log(`✅ Server is running on port http://localhost:${port}`);
+// });
