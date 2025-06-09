@@ -16,7 +16,22 @@
   .logo img{
     width: 300px;
   }
-  
+  /* Hide toggle button by default */
+.menuToggle {
+    display: none;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .closeButton {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    align-self: flex-end;
+    margin: 1rem;
+    cursor: pointer;
+  }
   .nav_links {
     display: flex;
     gap: 20px;
@@ -38,23 +53,61 @@
     font-weight: 500;
     cursor: pointer;
   }
-  .auth-button .btn:hover{
+  .auth_button .btn:hover{
     background: #FF8500;
   }
+  .mobileMenu {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 80%;
+  background: white;
+  padding: 1rem;
+  gap: 1.5rem;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+}
+.mobile_logo{
+    position: absolute;
+    top: 40px;
+
+}
+.mobile_logo img{
+    width: 200px;
+}
+.mobileMenu a{
+    text-decoration: none;
+    color: #000;
+    border-bottom: 1px solid grey;
+    padding-bottom: 10px;
+}
+.showMenu {
+  display: flex;
+  transform: translateX(0);
+}
   
   @media (max-width: 768px) {
     .header {
-      flex-direction: column;
       align-items: flex-start;
     }
-  
-    .nav_links {
-      margin-top: 10px;
-      display: none;
+    .logo img{
+        width: 140px;
     }
-  
-    .auth_button {
-      margin-top: 10px;
+    .menuToggle {
+        display: block;
+      }
+    .nav_links{
+        display: none;
     }
+    .nav_links.open {
+        display: flex;
+      }
+      .auth_button {
+        margin-left: 1rem;
+      }
   }
   
