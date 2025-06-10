@@ -19,6 +19,8 @@ const {
 router.get("/create-table", createTable);
 //register route
 router.post("/register", register);
+router.post('/login', loginUser);
+router.post('/forgotpassword', forgotPassword);
 //login route
 // router.post("/login", login);
 //user check router
