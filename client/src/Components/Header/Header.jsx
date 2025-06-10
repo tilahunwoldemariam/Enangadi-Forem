@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import classes from "./Header.module.css";
+import styles from "./Header.module.css";
 import logo from "../../asset/images/header_logo.png";
+import { IoCloseSharp } from "react-icons/io5";
+import { RxHamburgerMenu } from "react-icons/rx";
+
 
 const Header = ({ isAuthenticated, onSignOut }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,24 +12,24 @@ const Header = ({ isAuthenticated, onSignOut }) => {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <header className={classes.header}>
-      <div className={classes.logo}>
+    <header className={styles.header}>
+      <div className={styles.logo}>
         <img src={logo} alt="evangadi_logo" />
       </div>
 
-      <button className={classes.menuToggle} onClick={toggleMenu}>
-        ☰
+      <button className={styles.menuToggle} onClick={toggleMenu}>
+        <RxHamburgerMenu color="#FF8500" />
       </button>
 
       <nav
-        className={`${classes.mobileMenu} ${
-          isMenuOpen ? classes.showMenu : ""
+        className={`${styles.mobileMenu} ${
+          isMenuOpen ? styles.showMenu : ""
         }`}
       >
-        <button className={classes.closeButton} onClick={closeMenu}>
-          ×
+        <button className={styles.closeButton} onClick={closeMenu}>
+          <IoCloseSharp size={30} />
         </button>
-        <div className={classes.mobile_logo}>
+        <div className={styles.mobile_logo}>
           <img src={logo} alt="" />
         </div>
         <a href="/" onClick={closeMenu}>
@@ -42,29 +45,30 @@ const Header = ({ isAuthenticated, onSignOut }) => {
               onSignOut();
               closeMenu();
             }}
-            className={classes.btn}
+            className={styles.btn}
           >
             Log out
           </a>
         ) : (
-          <a href="/signin" onClick={closeMenu} className={classes.btn}>
+          
+          <a href="/signin" onClick={closeMenu} className={styles.btn}>
             sign In
           </a>
         )}
       </nav>
 
-      <div className={classes.nav_links}>
+      <div className={styles.nav_links}>
         <a href="/">Home</a>
         <a href="#">How it works</a>
-        <div className={classes.auth_button}>
+        <div className={styles.auth_button}>
           {isAuthenticated ? (
-            <button onClick={onSignOut} className={classes.btn}>
+            <button onClick={onSignOut} className={styles.btn}>
               LOG OUT
             </button>
           ) : (
-            <a href="/signin" className={classes.btn}>
+            <button to ="/signin"  className={styles.btn}>
               SIGN IN
-            </a>
+            </button>
           )}
         </div>
       </div>
