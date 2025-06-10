@@ -3,6 +3,7 @@ const mysql = require('mysql2');
 // 1. Create the connection pool
 const dbConnection = mysql.createPool({
   host: process.env.DB_HOST,
+<<<<<<< HEAD
   user: process.env.DB_USER ,
   password: process.env.DB_PASSWORD, 
   database: process.env.DB_NAME ,
@@ -22,4 +23,13 @@ const dbConnection = mysql.createPool({
 // });
 
 // 3. Export for team usage
+=======
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  connectionLimit: 10,
+});
+
+
+>>>>>>> 087b7389ead699679220182de9610da45bb5069e
 module.exports = dbConnection.promise();
