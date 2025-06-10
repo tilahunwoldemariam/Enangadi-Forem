@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {  useRef, useState } from "react";
 import styles from "./LoginPage.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
@@ -243,6 +243,75 @@ function LoginPage() {
       <div className={styles.loginLayout}>
         {/* Left side */}
         <div className={styles.left_side}>
+        
+      <div className={logInDisplay}>
+            <h3 className={styles.login_account}>Login to your account</h3>
+
+            <p className={styles.alrdy}>
+              Don't have an account?{' '}
+              <Link
+                to=""
+                className={styles.creat_account}
+                onClick={() => registerPage()}
+              >
+                Create an account
+              </Link>
+            </p>
+
+            <form className={styles.login_form}>
+              <small className={styles.error_display}>{errors && errors}</small>
+              <small className={styles.error_display}></small>
+
+              <input
+                type="email"
+                ref={emailDom1}
+                className={`${styles.email_input} ${styles.email_input_login} ${
+                  emptyFields.email ? styles.error_bg : ''
+                }`}
+                onChange={() =>
+                  setEmptyFields({ ...emptyFields, email: false })
+                }
+                placeholder="Email Address"
+              />
+
+              <input
+                type={showPassword ? 'password' : 'text'}
+                ref={passwordDom1}
+                className={`${styles.password__input} ${
+                  emptyFields.password ? styles.error_bg : ''
+                }`}
+                onChange={() =>
+                  setEmptyFields({ ...emptyFields, password: false })
+                }
+                placeholder="Password"
+              />
+
+              <span
+                className={styles.toggle_password}
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+
+              <p className={styles.forgotPwd}>
+                <Link
+                  to=""
+                  className={`${styles.lnk_toggler} ${styles.da}`}
+                  onClick={() => passwordReset()}
+                >
+                  Forgot Password?
+                </Link>
+              </p>
+
+              <button
+                type="submit"
+                onClick={handleSubmitLogin}
+                className={`butn_login ${styles.butn_login}`}
+              >
+                Login
+              </button>
+            </form>
+          </div>  
           {/* register form */}
           <div className={regInDisplay}>
             <h3 className={styles.join_net}>Join the network</h3>
@@ -357,6 +426,47 @@ function LoginPage() {
               </Link>
             </form>
           </div>
+{/* reset form */}
+          <div className={`${resetPage} ${styles.reset_con}`}>
+            <h4 className={styles.reset_title}>Reset your password</h4>
+
+            <p className={styles.reset__desc}>
+              Fill in your e-mail address below and we will send you an email
+              with further instructions.
+            </p>
+
+            <input
+              ref={emailDom3}
+              type="email"
+              className={styles.email_input}
+              onChange={() => setEmptyFields({ ...emptyFields, email: false })}
+              name="emailaddress"
+              placeholder="Email address"
+            />
+
+            <button className={`${styles.butn_login} butn_login`} type="submit">
+              Reset your password
+            </button>
+
+            <div className={styles.links}>
+              <Link
+                data-panel=".panel-login"
+                to="#"
+                onClick={() => loginPage()}
+              >
+                Already have an account?
+              </Link>
+
+              <Link
+                data-panel=".panel-signup"
+                to="#"
+                onClick={() => registerPage()}
+              >
+                Don’t have an account?
+              </Link>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
