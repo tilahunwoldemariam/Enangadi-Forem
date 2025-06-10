@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styles from './LoginPage.module.css';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaEye, FaEyeSlash } from 'react-icons/fa6';
-import axiosInstance from '../../Api/axiosConfig';
+import React, { useEffect, useRef, useState } from "react";
+import styles from "./LoginPage.module.css";
+import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import axiosInstance from "../../Api/axiosConfig";
 
 function LoginPage() {
   // State to manage the display of registration form
@@ -241,9 +241,126 @@ function LoginPage() {
   return (
     <section className={styles.main__bg}>
       <div className={styles.loginLayout}>
+        {/* Left side */}
+        <div className={styles.left_side}>
+          {/* register form */}
+          <div className={regInDisplay}>
+            <h3 className={styles.join_net}>Join the network</h3>
+
+            <p className={styles.alrdy}>
+              Already have an account?{" "}
+              <Link to="" onClick={() => loginPage()}>
+                Sign in
+              </Link>
+            </p>
+
+            <form>
+              <small className={styles.error_display}>{errors && errors}</small>
+
+              <input
+                type="email"
+                ref={emailDom2}
+                className={`${styles.email_input} ${
+                  emptyFields.email ? styles.error_bg : ""
+                }`}
+                onChange={() =>
+                  setEmptyFields({ ...emptyFields, email: false })
+                }
+                name="eva_email"
+                placeholder="Email address"
+              />
+
+              <div className={styles.personal_info}>
+                <input
+                  ref={firstNameDom}
+                  id="fname-input"
+                  type="text"
+                  className={`${styles.f_name} ${
+                    emptyFields.firstname ? styles.error_bg : ""
+                  }`}
+                  onChange={() =>
+                    setEmptyFields({ ...emptyFields, firstname: false })
+                  }
+                  name="firstname"
+                  placeholder="First Name"
+                />
+
+                <input
+                  ref={lastNameDom}
+                  id="lname-input"
+                  type="text"
+                  className={`${styles.l_name} ${
+                    emptyFields.lastname ? styles.error_bg : ""
+                  }`}
+                  onChange={() =>
+                    setEmptyFields({ ...emptyFields, lastname: false })
+                  }
+                  name="lastname"
+                  placeholder="Last Name"
+                />
+
+                <input
+                  ref={userNameDom}
+                  type="text"
+                  className={`${styles.l_name} ${styles.userName_input} ${
+                    emptyFields.username ? styles.error_bg : ""
+                  }`}
+                  onChange={() =>
+                    setEmptyFields({ ...emptyFields, username: false })
+                  }
+                  name="User name"
+                  placeholder="User Name"
+                />
+              </div>
+
+              <div className={styles.paswrd_insert}>
+                <input
+                  ref={passwordDom2}
+                  type={showPassword ? "password" : "text"}
+                  className={`${styles.password__input} ${
+                    emptyFields.password ? styles.error_bg : ""
+                  }`}
+                  onChange={() =>
+                    setEmptyFields({ ...emptyFields, password: false })
+                  }
+                  name="password"
+                  placeholder="Password"
+                />
+                <div
+                  className={styles.toggle_password}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </div>
+              </div>
+
+              <p className={`${styles.term_policy} ${styles.small}`}>
+                I agree to the <Link to="#">privacy policy</Link> and{" "}
+                <Link to="#">terms of service</Link>.
+              </p>
+
+              <button
+                id={styles.agree_but}
+                className={`${styles.butn_login} butn_login`}
+                type="submit"
+                onClick={handleSubmitSignUp}
+              >
+                Agree and Join
+              </button>
+
+              <Link
+                to=""
+                className={styles.already}
+                onClick={() => loginPage()}
+              >
+                Already have an account?
+              </Link>
+            </form>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-export default LoginPage
+export default LoginPage;
