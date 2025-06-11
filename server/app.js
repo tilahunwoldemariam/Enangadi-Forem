@@ -16,8 +16,6 @@ app.use(cors());
 //json middleware to extract json data
 app.use(express.json());
 
-const { createTable, register } = require("./controller/userController");
-app.get("/create-table", createTable);
 //user middle ware{
  const userRoute = require("./routes/userRoute")
  app.use("/api/users", userRoute);
