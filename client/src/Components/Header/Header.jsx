@@ -3,13 +3,28 @@ import styles from "./Header.module.css";
 import logo from "../../asset/images/header_logo.png";
 import { IoCloseSharp } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { useContext } from "react";
+import { AuthContext } from "../../Context/Context";
+import { Type } from "../../Utility/actionType";
+import { useNavigate } from "react-router-dom";
 
 
-const Header = ({ isAuthenticated, onSignOut }) => {
+
+const Header = () => {
+ const [{user}, dispatch] = useContext(AuthContext)
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
+
+  const navigate = useNavigate()
+
+  const onSignOut=()=>{
+    dispatch({
+      type:Type.REMOVE_USER
+    })
+    navigate('/login')
+  }
 
   return (
     <header className={styles.header}>
@@ -39,7 +54,7 @@ const Header = ({ isAuthenticated, onSignOut }) => {
           How it works
         </a>
 
-        {isAuthenticated ? (
+        {user ? (
           <a
             onClick={() => {
               onSignOut();
@@ -61,7 +76,7 @@ const Header = ({ isAuthenticated, onSignOut }) => {
         <a href="/">Home</a>
         <a href="#">How it works</a>
         <div className={styles.auth_button}>
-          {isAuthenticated ? (
+          {user ? (
             <button onClick={onSignOut} className={styles.btn}>
               LOG OUT
             </button>

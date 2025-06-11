@@ -3,8 +3,13 @@ import styles from "./LoginPage.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import axiosInstance from "../../Api/axiosConfig";
+import { useContext } from "react";
+import { AuthContext } from "../../Context/Context";
+import { Type } from "../../Utility/actionType";
 
 function LoginPage() {
+  const [state, dispatch] = useContext(AuthContext);
+
   // State to manage the display of registration form
   const [regInDisplay, setRegInDisplay] = useState(styles.display);
 
@@ -19,6 +24,8 @@ function LoginPage() {
 
   // State to manage password visibility
   const [showPassword, setShowPassword] = useState(true);
+
+  const navigate = useNavigate();
 
   // Ref for email input field
   const emailDom1 = useRef(null);
@@ -142,22 +149,30 @@ function LoginPage() {
         email,
         password,
       });
+      console.log(res);
 
-      alert("Login successful!");
+      dispatch({
+        type: Type.ADD_USER,
+        payload: {
+          token: res.data.token,
+          user: res.data.user
+        },
+      });
+
+      // alert("Login successful!");
 
       localStorage.setItem("token", res.data.token); // Store token in localStorage
 
       localStorage.setItem("user", JSON.stringify(res.data.user)); // Store user info in localStorage
 
-      // navigate("/"); // Redirect to home page after successful login
-      window.location.reload(); // Reload the page to reflect the logged-in state I'll remove this later
+      navigate("/"); // Redirect to home page after successful login
 
       console.log(res?.data?.token);
     } catch (error) {
       alert(
         error?.response?.data?.msg || "Error during login. Please try again."
       );
-      console.error("Error during Login:", error.response);
+      console.error("Error during Login:", error);
       setErrors(
         error?.response?.data?.msg || "An error occurred. Please try again."
       );
@@ -231,7 +246,7 @@ function LoginPage() {
       // navigate("/login"); // Redirect to login page after successful registration
     } catch (error) {
       alert("Error during sign up. Please try again.");
-      console.error("Error during sign up:", error.response);
+      console.error("Error during sign up:", error.message);
       setErrors(
         error?.response?.data?.msg || "An error occurred. Please try again."
       );
