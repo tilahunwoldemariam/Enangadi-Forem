@@ -4,6 +4,7 @@ import { AuthContext } from '../../Context/Context';
 import axiosInstance from '../../Api/axiosConfig';
 import { useState } from 'react';
 import { format, formatDistanceToNow } from "date-fns";
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [{ user:{firstname}, token }, _] = useContext(AuthContext);
@@ -59,9 +60,12 @@ const Home = () => {
             Ready to dive into today's coding challenges? Ask questions, share
             knowledge, and learn together!
           </p>
-          <button className={styles.askButton}>
-            <span className={styles.plusIcon}>+</span> Ask a Question
-          </button>
+
+          <Link to='/ask'>
+            <button className={styles.askButton}>
+              <span className={styles.plusIcon}>+</span> Ask a Question
+            </button>
+          </Link>
         </div>
       </section>
 
@@ -74,9 +78,8 @@ const Home = () => {
         </div>
 
         <div className={styles.questionsList}>
-          {questions?.map((question) =>{
-            
-            const postedTime= new Date(question.created_at); 
+          {questions?.map((question) => {
+            const postedTime = new Date(question.created_at);
             const timeAgo = formatDistanceToNow(postedTime, {
               addSuffix: true,
             });
@@ -84,7 +87,7 @@ const Home = () => {
             const formattedDate = format(postedTime, "MMM d"); // "Jun 11"
 
             const fullText = `${timeAgo} • ${formattedDate}`;
-            
+
             return (
               <article key={question.id} className={styles.questionCard}>
                 <h3 className={styles.questionTitle}>{question.title}</h3>
@@ -98,7 +101,8 @@ const Home = () => {
                   <span className={styles.time}>{fullText}</span>
                 </div>
               </article>
-            );})}
+            );
+          })}
         </div>
       </section>
     </main>

@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from "react";
-import API from "../../api/Api";
+// import API from "../../api/axiosConfig";
 import QuestionForm from "../../Components/Questions/QuestionForm/QuestionForm";
 import QuestionList from "../../Components/Questions/QuestionList/QuestionList";
 import styles from "./Questionpage.module.css";
+import { Link } from "react-router-dom";
 
 const QuestionsPage = () => {
   const [questions, setQuestions] = useState([]);
 
-  const fetchQuestions = async () => {
-    try {
-      const res = await API.get("/question/all-questions");
-      setQuestions(res.data.questions || []);
-    } catch (err) {
-      console.error("Error fetching questions", err);
-    }
-  };
+  // const fetchQuestions = async () => {
+  //   try {
+  //     const res = await API.get("/question/all-questions");
+  //     setQuestions(res.data.questions || []);
+  //   } catch (err) {
+  //     console.error("Error fetching questions", err);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchQuestions();
-  }, []);
+  // useEffect(() => {
+  //   fetchQuestions();
+  // }, []);
 
   return (
     <div className={styles.container}>
@@ -32,9 +33,12 @@ const QuestionsPage = () => {
         </lu>
       </div>
       <h3>📋 Ask a public question </h3>
-      <QuestionForm onPost={fetchQuestions} />
+      <Link to='/'>
+      Go to Question Page
+      </Link>
+      <QuestionForm  />
       <hr />
-      <QuestionList questions={questions} />
+      {/* <QuestionList  /> */}
     </div>
   );
 };

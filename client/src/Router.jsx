@@ -5,6 +5,7 @@ import Login from './Pages/LoginPage/LoginPage';
 import Header from './Components/Header/Header';
 import Home from './Pages/Home/Home';
 import { AuthContext } from './Context/Context';
+import QuestionPage from './Pages/Questionpage/Questionpage'
 
 function Router() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -39,6 +40,7 @@ function Router() {
   return (
     <>
       <Header />
+
       <Routes>
         <Route
           path="/"
@@ -46,9 +48,14 @@ function Router() {
             isAuthenticated ? <Home /> : <Navigate to="/login" replace />
           }
         />
+        <Route
+          path="/ask"
+          element={
+            isAuthenticated ? <QuestionPage /> : <Navigate to="/login" replace />
+          }
+        />
         <Route path="/login" element={<Login />} />
       </Routes>
-      ;
     </>
   );
 }

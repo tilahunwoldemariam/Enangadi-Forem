@@ -1,31 +1,49 @@
 import React, { useState } from "react";
 import styles from "./QuestionForm.module.css";
-import API from "../../../api/Api";
+import API from "../../../api/axiosConfig";
+import { useContext } from "react";
+import { AuthContext } from "../../../Context/Context";
+import axios from "axios";
 
 const QuestionForm = ({ onPost }) => {
+  const [ {token}, _] = useContext(AuthContext)
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tag, setTag] = useState("");
 
+console.log(token)
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+
     try {
-      await API.post("/question/post-questions", { title, description, tag });
-      onPost();
-      setTitle("");
-      setDescription("");
-      setTag("");
+      await axios.post("http://localhost:8000/api/questions/post-questions", { title, description, tag },{
+        headers:{Authorization:`Bearer ${token}`}
+      });
+      setTitle("")
+      setDescription("")
+      setTag("")
+
+      alert("question posted")
+      console.log("question posted sucessfully")
+     
     } catch (error) {
       alert("Failed to post question.");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
+    <form className={styles.form}>
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Title"
+        required
+      />
+      <input
+        value={tag}
+        onChange={(e) => setTag(e.target.value)}
+        placeholder="Tag"
         required
       />
       <textarea
@@ -35,13 +53,10 @@ const QuestionForm = ({ onPost }) => {
         required
         className={styles.descriptionTextarea}
       />
-      <input
-        value={tag}
-        onChange={(e) => setTag(e.target.value)}
-        placeholder="Tag"
-        required
-      />
-      <button type="submit">Post Your Question</button>
+
+      <button type="submit" onClick={handleSubmit}>
+        Post Your Question
+      </button>
     </form>
   );
 };
