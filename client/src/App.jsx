@@ -1,16 +1,7 @@
-import React from 'react'
-import Header from './Components/Header/Header'
-import LoginPage from './Pages/LoginPage/LoginPage';
-import Footer from './Components/Footer/Footer';
+import Router from "./Router";
 
 function App() {
-  return (
-    <div>
-      <Header isAuthenticated={false} />
-      <LoginPage />
-      <Footer />
-    </div>
-  );
+  return <Router />;
 }
 
-export default App
+export default App;
