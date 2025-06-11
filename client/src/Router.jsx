@@ -4,6 +4,7 @@ import axiosInstance from './Api/axiosConfig';
 import Login from './Pages/LoginPage/LoginPage';
 import Home from './Pages/Home/Home';
 import { AuthContext } from './Context/Context';
+import QuestionPage from './Pages/Questionpage/Questionpage'
 import Shared from './Components/Shared/Shared';
 
 function Router() {
@@ -43,6 +44,12 @@ function Router() {
           path="/"
           element={
             isAuthenticated ? <Home /> : <Navigate to="/login" replace />
+          }
+        />
+        <Route
+          path="/ask"
+          element={
+            isAuthenticated ? <QuestionPage /> : <Navigate to="/login" replace />
           }
         />
         <Route path="/login" element={<Login />} />

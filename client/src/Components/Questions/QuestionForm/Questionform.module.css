@@ -1,0 +1,33 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 500px;
+    margin-bottom: 20px;
+    margin: auto;  
+  }
+  
+  input,
+  textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 800px;
+    
+  }
+  
+  button {
+    background-color: #2d6cdf;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 50%;
+  }
+  .descriptionTextarea{
+    height: 150px; 
+    min-height: 150px;
+    rsize:vertical
+  }
+  

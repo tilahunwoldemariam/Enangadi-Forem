@@ -107,6 +107,8 @@ function LoginPage() {
   // page changing functions end here***
   // Handle form submission for login
   async function handleSubmitLogin(e) {
+    e.preventDefault();
+   
     setErrors(""); // Reset errors before submission
     setEmptyFields({
       email: false,
@@ -116,7 +118,7 @@ function LoginPage() {
       lastname: false,
     });
 
-    e.preventDefault();
+   
 
     // Get values from input fields
     const email = emailDom1.current.value.trim();
@@ -181,6 +183,7 @@ function LoginPage() {
 
   // Handle form submission for registration
   async function handleSubmitSignUp(e) {
+    e.preventDefault();
     setErrors(""); // Reset errors before submission
     setEmptyFields({
       email: false,
@@ -190,7 +193,7 @@ function LoginPage() {
       lastname: false,
     });
 
-    e.preventDefault();
+  
     const username = userNameDom.current.value.trim();
     const firstname = firstNameDom.current.value.trim();
     const lastname = lastNameDom.current.value.trim();
