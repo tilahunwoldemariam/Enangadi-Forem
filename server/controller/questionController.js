@@ -8,7 +8,7 @@ async function postQuestion(req, res) {
   const questionid = uuidv4();
 
   const { title, description, tag } = req.body;
-  if (!title || !description || !tag) {
+  if (!title || !description) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       error: 'Bad Request',
       msg: 'Please provide all required fields',
