@@ -1,12 +1,7 @@
-import React from 'react'
-import QuestionsPage from '../../client/src/Pages/Questionpage/Questionpage'
+import Router from "./Router";
 
 function App() {
-  return (
-    <div>
-      <QuestionsPage/>
-    </div>
-  )
+  return <Router />;
 }
 
-export default App
+export default App;
