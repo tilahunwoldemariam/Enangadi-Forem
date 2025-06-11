@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import axiosInstance from './Api/axiosConfig';
 import Login from './Pages/LoginPage/LoginPage';
-import Header from './Components/Header/Header';
 import Home from './Pages/Home/Home';
 import { AuthContext } from './Context/Context';
+import Shared from './Components/Shared/Shared';
 
 function Router() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -37,8 +37,7 @@ function Router() {
     return <div>Loading...</div>;
   }
   return (
-    <>
-      <Header />
+    <Shared>
       <Routes>
         <Route
           path="/"
@@ -48,8 +47,7 @@ function Router() {
         />
         <Route path="/login" element={<Login />} />
       </Routes>
-      ;
-    </>
+    </Shared>
   );
 }
 
