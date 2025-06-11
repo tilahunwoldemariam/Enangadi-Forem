@@ -1,0 +1,20 @@
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    
+  }
+  .steps {
+    display: block;
+    text-align: center;
+    margin-bottom: 100px;
+   
+  }
+  .steps li{
+    list-style: disc;
+    line-height: 1.4;
+    
+  }
+  .container h3{
+   text-align: center;
+  }
