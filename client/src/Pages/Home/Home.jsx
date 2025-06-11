@@ -10,30 +10,7 @@ const Home = () => {
   const [{ user:{firstname}, token }, _] = useContext(AuthContext);
   const [questions, setQuestions]= useState([]);
 
-  
-
   const userFirstName = firstname.charAt(0).toUpperCase() + firstname.slice(1).toLowerCase();
-
-  // const questions = [
-  //   {
-  //     id: 1,
-  //     title: 'How do I divide most worlds back over in my community',
-  //     author: 'Jamie Chen',
-  //     time: '2 hours ago',
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Best way to handle async operations in React?',
-  //     author: 'Taylor Smith',
-  //     time: '5 hours ago',
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'CSS Grid not working as expected',
-  //     author: 'Morgan Lee',
-  //     time: '1 day ago',
-  //   },
-  // ];
 
   useEffect(() => { 
     async function fetchQuestions() {
@@ -46,7 +23,7 @@ const Home = () => {
       setQuestions(res.data.questions)
     }
     fetchQuestions();
-  }, [questions]);
+  }, [questions, token]);
 
   return (
     <main className={styles.container}>
