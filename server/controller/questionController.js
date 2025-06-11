@@ -39,7 +39,9 @@ async function getAllQuestions(req, res) {
         questions.id AS question_id,
         questions.title,
         questions.description AS content,
-        users.username AS user_name
+        users.username,
+        questions.created_at,
+        users.firstname
       FROM questions
       JOIN users ON questions.userid = users.userid
       ORDER BY questions.id DESC
@@ -73,7 +75,8 @@ async function getSingleQuestion(req, res) {
           questions.title,
           questions.description AS content,
           questions.tag,
-          users.username AS user_name
+          questions.created_at,
+          users.username
         FROM questions
         JOIN users ON questions.userid = users.userid
         WHERE questions.id = ?`,

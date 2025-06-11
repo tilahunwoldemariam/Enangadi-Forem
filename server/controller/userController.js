@@ -60,7 +60,7 @@ async function loginUser(req, res) {
   }
   try {
     const [user] = await dbConnection.query(
-      'SELECT userid, username, password FROM users WHERE email = ?',
+      "SELECT userid, username, password, firstname FROM users WHERE email = ?",
       [email]
     );
     if (user.length === 0) {
@@ -78,12 +78,18 @@ async function loginUser(req, res) {
     }
     const username = user[0].username;
     const userid = user[0].userid;
+    const firstname = user[0].firstname;
     const token = jwt.sign({ username, userid }, 'secret', {
       expiresIn: '1h',
     });
     res.status(200).json({
       message: 'User login successful',
       token,
+      user: {
+        username,
+        firstname,
+        userid
+      }
     });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
