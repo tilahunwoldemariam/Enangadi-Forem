@@ -1,32 +1,38 @@
 import React, { useState } from "react";
 import styles from "./QuestionForm.module.css";
-import API from "../../../api/axiosConfig";
 import { useContext } from "react";
 import { AuthContext } from "../../../Context/Context";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
+import axiosBase from "../../../api/axiosConfig";
 
-const QuestionForm = ({ onPost }) => {
-  const [ {token}, _] = useContext(AuthContext)
+const QuestionForm = () => {
+  const [{ token }, _] = useContext(AuthContext);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [tag, setTag] = useState("");
 
-console.log(token)
+  const navigate = useNavigate();
+
+  const posted = useRef(null);
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
 
     try {
-      await axios.post("http://localhost:8000/api/questions/post-questions", { title, description, tag },{
-        headers:{Authorization:`Bearer ${token}`}
-      });
-      setTitle("")
-      setDescription("")
-      setTag("")
+      await axiosBase.post(
+        "/questions/post-questions",
+        { title, description },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setTitle("");
+      setDescription("");
 
-      alert("question posted")
-      console.log("question posted sucessfully")
-     
+      posted.current.style.display = "block";
+      setTimeout(() => {
+        navigate("/");
+        posted.current.style.display = "none";
+      }, 2000);
     } catch (error) {
       alert("Failed to post question.");
     }
@@ -40,12 +46,7 @@ console.log(token)
         placeholder="Title"
         required
       />
-      <input
-        value={tag}
-        onChange={(e) => setTag(e.target.value)}
-        placeholder="Tag"
-        required
-      />
+
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
@@ -53,6 +54,10 @@ console.log(token)
         required
         className={styles.descriptionTextarea}
       />
+
+      <div style={{ display: "none", color: "green" }} ref={posted}>
+        question posted successfully
+      </div>
 
       <button type="submit" onClick={handleSubmit}>
         Post Your Question

@@ -1,26 +1,11 @@
 import React, { useEffect, useState } from "react";
-// import API from "../../api/axiosConfig";
-import QuestionForm from "../../Components/Questions/QuestionForm/QuestionForm";
-import QuestionList from "../../Components/Questions/QuestionList/QuestionList";
 import styles from "./Questionpage.module.css";
 import { Link } from "react-router-dom";
+import QuestionForm from '../../Components/Questions/QuestionForm/QuestionForm'
 
 const QuestionsPage = () => {
-  const [questions, setQuestions] = useState([]);
-
-  // const fetchQuestions = async () => {
-  //   try {
-  //     const res = await API.get("/question/all-questions");
-  //     setQuestions(res.data.questions || []);
-  //   } catch (err) {
-  //     console.error("Error fetching questions", err);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchQuestions();
-  // }, []);
-
+ 
+  
   return (
     <div className={styles.container}>
       <div className={styles.steps}>
@@ -37,8 +22,7 @@ const QuestionsPage = () => {
       Go to Question Page
       </Link>
       <QuestionForm  />
-      <hr />
-      {/* <QuestionList  /> */}
+    
     </div>
   );
 };
