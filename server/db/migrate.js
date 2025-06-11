@@ -17,7 +17,7 @@ async function createdbTable(req, res) {
     userid INT(20) NOT NULL,
     title VARCHAR(100) NOT NULL,
     description VARCHAR(200) NOT NULL,
-    tag VARCHAR(100) NOT NULL,
+    tag VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(id, questionid),
     FOREIGN KEY(userid) REFERENCES users(userid)

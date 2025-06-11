@@ -8,7 +8,7 @@ import { AuthContext } from "../../Context/Context";
 import { Type } from "../../Utility/actionType";
 
 function LoginPage() {
-  const [state, dispatch] = useContext(AuthContext);
+  const [_, dispatch] = useContext(AuthContext);
 
   // State to manage the display of registration form
   const [regInDisplay, setRegInDisplay] = useState(styles.display);
