@@ -1,14 +1,9 @@
-import React from 'react'
-import Answer from './components/Answer/AnswerPage'
+// import QuestionsPage from "./Pages/Questionpage/Questionpage";
+import Router from "./Router";
 
 function App() {
-  return (
-    <>
-   <Answer/>
-    <div>App</div>
-    </>
-    
-  )
+// return <QuestionsPage/>
+  return <Router />;
 }
 
-export default App
+export default App;
