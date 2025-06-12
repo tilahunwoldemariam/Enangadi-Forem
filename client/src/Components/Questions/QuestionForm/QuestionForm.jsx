@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './QuestionForm.module.css';
 import { useContext } from 'react';
 import { AuthContext } from '../../../Context/Context';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useRef } from 'react';
 import axiosBase from '../../../api/axiosConfig';
 
@@ -160,6 +160,11 @@ const QuestionForm = () => {
       </div>
 
       <div className={styles.buttonGroup}>
+        <div className={styles.backLink}>
+          <Link to="/" className={styles.backButton}>
+            ← Back to Questions
+          </Link>
+        </div>
         <button
           type="submit"
           className={styles.submitButton}

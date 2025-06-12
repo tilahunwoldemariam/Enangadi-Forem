@@ -272,7 +272,7 @@ function LoginPage() {
               </Link>
             </p>
 
-            <form className={styles.login_form}>
+            <form className={styles.login_form} onSubmit={handleSubmitLogin}>
               <small className={styles.error_display}>{errors && errors}</small>
               <small className={styles.error_display}></small>
 
@@ -319,7 +319,6 @@ function LoginPage() {
 
               <button
                 type="submit"
-                onClick={handleSubmitLogin}
                 className={`butn_login ${styles.butn_login}`}
               >
                 Login
@@ -337,7 +336,7 @@ function LoginPage() {
               </Link>
             </p>
 
-            <form>
+            <form onSubmit={handleSubmitSignUp}>
               <small className={styles.error_display}>{errors && errors}</small>
 
               <input
@@ -426,7 +425,6 @@ function LoginPage() {
                 id={styles.agree_but}
                 className={`${styles.butn_login} butn_login`}
                 type="submit"
-                onClick={handleSubmitSignUp}
               >
                 Agree and Join
               </button>

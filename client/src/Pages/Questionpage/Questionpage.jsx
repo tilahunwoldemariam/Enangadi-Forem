@@ -25,12 +25,6 @@ const QuestionsPage = () => {
           <div className={styles.formCard}>
             <h3 className={styles.formHeader}>📋 Ask a public question</h3>
             <QuestionForm />
-
-            <div className={styles.backLink}>
-              <Link to="/" className={styles.backButton}>
-                ← Back to Questions
-              </Link>
-            </div>
           </div>
         </section>
       </div>
