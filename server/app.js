@@ -17,9 +17,8 @@ app.use(cors());
 app.use(express.json());
 
 //user middle ware{
- const userRoute = require("./routes/userRoute")
- app.use("/api/users", userRoute);
-
+const userRoute = require('./routes/userRoute');
+app.use('/api/users', userRoute);
 
 // Test the backend listening
 app.get('/', (req, res) => {
@@ -36,7 +35,7 @@ app.use('/api/users', userRoutes);
 
 // Question routes middleware
 const questionRoutes = require('./routes/questionRoute');
-app.use('/api/questions', authMiddleware,  questionRoutes);
+app.use('/api/questions', authMiddleware, questionRoutes);
 
 // Answer routes middleware
 const answerRoutes = require('./routes/answerRoute');
@@ -49,8 +48,8 @@ async function start() {
       console.log(`✅ Server is running on port http://localhost:${port}`);
     });
     console.log('✅ Successfully connected to MySQL Database');
-} catch (error) {
-  console.error('❌ Error setting up the server:', error.message);
+  } catch (error) {
+    console.error('❌ Error setting up the server:', error.message);
   }
 }
 

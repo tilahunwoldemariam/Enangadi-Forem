@@ -8,8 +8,9 @@
 }
 
 .loginLayout {
-display: grid;
-grid-template-columns: repeat(2, 1fr);
+/* display: grid;
+grid-template-columns: repeat(2, 1fr); */
+display: flex;
 gap: 3rem;
 max-width: 1200px;
 margin: 0 auto;
@@ -18,7 +19,7 @@ margin: 0 auto;
 /* left side start here */
 .left_side{
   background-color: var(--color-butn-txt);
-  height: 500px;
+  /* height: 500px; */
   margin-top: 6rem;
   margin-left: 10rem;
   border-radius: 10px;
@@ -142,13 +143,18 @@ margin: 10px 0;
   border-radius: 4px;
 
 }
+
 .personal_info{
   display: grid;
   margin: 10px auto;
   width: 90%;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  
+  max-width: 100% !important;
+}
+
+.personal_info input {
+  max-width: 100% !important;
 }
 
 .personal_info .userName_input {
@@ -259,8 +265,8 @@ transition: var(--transition);
 
 /* right side  start here*/
 .right_side{
-  width: 550px;
-  height: 500px;
+  /* width: 550px; */
+  /* height: 500px; */
   margin-top: 6rem;
   margin-left: 2rem;
   text-align: left;
@@ -387,9 +393,15 @@ transition: var(--transition);
   .right_side{
       /* width: 300px; */
       width: 90%;
-      height: 500px;
+      /* height: 500px; */
       margin: 2rem auto 0 ;
       margin-top: 2rem;
       text-align: left;
   }
+}
+
+.left_side, .right_side {
+  max-width: 500px;
+  margin: 0 auto;
+  height: auto;
 }
