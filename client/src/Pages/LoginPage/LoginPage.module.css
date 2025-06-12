@@ -351,8 +351,11 @@ transition: var(--transition);
   }
 }
 
-
-
+@media (max-width: 1150px) {
+  .left_side {
+    margin-left: 4rem;
+  }
+}
 
 /* right side end here */
 @media screen and (max-width: 980px){
