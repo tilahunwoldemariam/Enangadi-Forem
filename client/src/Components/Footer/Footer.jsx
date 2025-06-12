@@ -1,6 +1,6 @@
 import React from 'react';
 import './Footer.css';
-import logo from '../../asset/evangadi-logo-footer.png';
+import logo from '../../asset/evangadi-logo-footer1.png';
 import { FaFacebookF } from 'react-icons/fa6';
 import { FaInstagram } from 'react-icons/fa6';
 import { FaYoutube } from 'react-icons/fa6';
