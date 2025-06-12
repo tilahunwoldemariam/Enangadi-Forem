@@ -1,10 +1,10 @@
-import React from "react";
-import "./Footer.css";
-import logo from "../../asset/evangadi-logo-footer.png";
-import { FaFacebookF } from "react-icons/fa6";
-import { FaInstagram } from "react-icons/fa6";
-import { FaYoutube } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import React from 'react';
+import './Footer.css';
+import logo from '../../asset/evangadi-logo-footer.png';
+import { FaFacebookF } from 'react-icons/fa6';
+import { FaInstagram } from 'react-icons/fa6';
+import { FaYoutube } from 'react-icons/fa6';
+import { Link } from 'react-router-dom';
 const Footer = () => {
   return (
     <section className="footer__container">
