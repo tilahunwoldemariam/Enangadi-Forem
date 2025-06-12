@@ -14,33 +14,9 @@ const Home = () => {
     },
     _,
   ] = useContext(AuthContext);
+  
   const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
-
-  // At the top of your Home component
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-
-    setIsSearching(true);
-    try {
-      const res = await axiosInstance.get(
-        `/questions/search?q=${encodeURIComponent(searchQuery)}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setSearchResults(res.data.questions);
-    } catch (error) {
-      console.error('Search failed:', error);
-    } finally {
-      setIsSearching(false);
-    }
-  };
 
   const userFirstName =
     firstname.charAt(0).toUpperCase() + firstname.slice(1).toLowerCase();
@@ -80,7 +56,7 @@ const Home = () => {
       </section>
 
       {/* Search bar */}
-      <section className={styles.searchSection}>
+      {/* <section className={styles.searchSection}>
         <form onSubmit={handleSearch} className={styles.searchForm}>
           <div className={styles.searchContainer}>
             <input
@@ -105,7 +81,7 @@ const Home = () => {
             </button>
           </div>
         </form>
-      </section>
+      </section> */}
 
       <div className={styles.floatingActions}>
         <button className={styles.mainAction} onClick={() => navigate('/ask')}>
@@ -127,14 +103,14 @@ const Home = () => {
         </div>
 
         <div className={styles.questionsList}>
-          {(isSearching ? [] : searchQuery ? searchResults : questions)?.map(
+          { questions?.map(
             (question) => {
               const postedTime = new Date(question.created_at);
               const timeAgo = formatDistanceToNow(postedTime, {
                 addSuffix: true,
               });
 
-              const formattedDate = format(postedTime, 'MMM d'); // "Jun 11"
+              const formattedDate = format(postedTime, 'MMM d');
 
               const fullText = `${timeAgo} • ${formattedDate}`;
 
@@ -156,17 +132,6 @@ const Home = () => {
                 </article>
               );
             }
-          )}
-          {searchQuery && searchResults.length === 0 && !isSearching && (
-            <div className={styles.noResults}>
-              <p>No questions found for "{searchQuery}"</p>
-              <button
-                onClick={() => setSearchQuery('')}
-                className={styles.clearSearch}
-              >
-                Clear search
-              </button>
-            </div>
           )}
         </div>
       </section>
