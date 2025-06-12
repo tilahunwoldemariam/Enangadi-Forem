@@ -99,6 +99,10 @@ font-size: 16px;
   font-weight: bold;
 }
 
+form {
+  padding-bottom: 15px;
+}
+
 form input:focus,
 .reset_con input:focus {
 border-bottom: 3px solid var(--color-howitwork-bg);
@@ -143,7 +147,6 @@ margin: 10px 0;
   border-radius: 4px;
 
 }
-
 .personal_info{
   display: grid;
   margin: 10px auto;
@@ -402,6 +405,25 @@ transition: var(--transition);
 
 .left_side, .right_side {
   max-width: 500px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  margin-top: 0;
   height: auto;
+}
+
+.personal_info {
+  display: grid;
+  margin: 10px auto;
+  width: 90%;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 100% !important;
+}
+
+.personal_info input {
+  width: 100%; /* Make inputs fill their grid cells */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.f_name, .l_name, .userName_input {
+  width: 100%;
 }
