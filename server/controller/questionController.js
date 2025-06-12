@@ -71,7 +71,8 @@ async function getSingleQuestion(req, res) {
   try {
     const [results] = await dbConnection.query(
         `SELECT 
-          questions.id AS question_id,
+          questions.id,
+          questions.questionid,
           questions.title,
           questions.description AS content,
           questions.tag,
