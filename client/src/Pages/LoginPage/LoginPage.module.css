@@ -8,8 +8,9 @@
 }
 
 .loginLayout {
-display: grid;
-grid-template-columns: repeat(2, 1fr);
+/* display: grid;
+grid-template-columns: repeat(2, 1fr); */
+display: flex;
 gap: 3rem;
 max-width: 1200px;
 margin: 0 auto;
@@ -18,7 +19,7 @@ margin: 0 auto;
 /* left side start here */
 .left_side{
   background-color: var(--color-butn-txt);
-  height: 500px;
+  /* height: 500px; */
   margin-top: 6rem;
   margin-left: 10rem;
   border-radius: 10px;
@@ -98,6 +99,10 @@ font-size: 16px;
   font-weight: bold;
 }
 
+form {
+  padding-bottom: 15px;
+}
+
 form input:focus,
 .reset_con input:focus {
 border-bottom: 3px solid var(--color-howitwork-bg);
@@ -148,7 +153,11 @@ margin: 10px 0;
   width: 90%;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  
+  max-width: 100% !important;
+}
+
+.personal_info input {
+  max-width: 100% !important;
 }
 
 .personal_info .userName_input {
@@ -259,8 +268,8 @@ transition: var(--transition);
 
 /* right side  start here*/
 .right_side{
-  width: 550px;
-  height: 500px;
+  /* width: 550px; */
+  /* height: 500px; */
   margin-top: 6rem;
   margin-left: 2rem;
   text-align: left;
@@ -342,8 +351,11 @@ transition: var(--transition);
   }
 }
 
-
-
+@media (max-width: 1150px) {
+  .left_side {
+    margin-left: 4rem;
+  }
+}
 
 /* right side end here */
 @media screen and (max-width: 980px){
@@ -387,9 +399,34 @@ transition: var(--transition);
   .right_side{
       /* width: 300px; */
       width: 90%;
-      height: 500px;
+      /* height: 500px; */
       margin: 2rem auto 0 ;
       margin-top: 2rem;
       text-align: left;
   }
+}
+
+.left_side, .right_side {
+  max-width: 500px;
+  /* margin: 0 auto; */
+  margin-top: 0;
+  height: auto;
+}
+
+.personal_info {
+  display: grid;
+  margin: 10px auto;
+  width: 90%;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 100% !important;
+}
+
+.personal_info input {
+  width: 100%; /* Make inputs fill their grid cells */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.f_name, .l_name, .userName_input {
+  width: 100%;
 }
