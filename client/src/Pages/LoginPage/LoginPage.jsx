@@ -1,11 +1,11 @@
-import React, {  useRef, useState } from "react";
-import styles from "./LoginPage.module.css";
-import { Link, useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa6";
-import axiosInstance from "../../Api/axiosConfig";
-import { useContext } from "react";
-import { AuthContext } from "../../Context/Context";
-import { Type } from "../../Utility/actionType";
+import React, { useRef, useState } from 'react';
+import styles from './LoginPage.module.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa6';
+import axiosInstance from '../../Api/axiosConfig';
+import { useContext } from 'react';
+import { AuthContext } from '../../Context/Context';
+import { Type } from '../../Utility/actionType';
 
 function LoginPage() {
   const [_, dispatch] = useContext(AuthContext);
@@ -17,10 +17,10 @@ function LoginPage() {
   const [resetPage, setResetPage] = useState(styles.display);
 
   // State to manage errors
-  const [errors, setErrors] = useState("");
+  const [errors, setErrors] = useState('');
 
   // State to manage the display of login form
-  const [logInDisplay, setLogInDisplay] = useState("");
+  const [logInDisplay, setLogInDisplay] = useState('');
 
   // State to manage password visibility
   const [showPassword, setShowPassword] = useState(true);
@@ -65,7 +65,7 @@ function LoginPage() {
 
   // page changing functions start here***
   function registerPage() {
-    setErrors(""); // Reset errors
+    setErrors(''); // Reset errors
     setEmptyFields({
       email: false,
       password: false,
@@ -73,12 +73,12 @@ function LoginPage() {
       firstname: false,
       lastname: false,
     }); // Reset empty fields
-    setRegInDisplay("");
+    setRegInDisplay('');
     setLogInDisplay(styles.display);
     setResetPage(styles.display);
   }
   function loginPage() {
-    setErrors(""); // Reset errors
+    setErrors(''); // Reset errors
     setEmptyFields({
       email: false,
       password: false,
@@ -86,12 +86,12 @@ function LoginPage() {
       firstname: false,
       lastname: false,
     }); // Reset empty fields
-    setLogInDisplay("");
+    setLogInDisplay('');
     setRegInDisplay(styles.display);
     setResetPage(styles.display);
   }
   function passwordReset() {
-    setErrors(""); // Reset errors
+    setErrors(''); // Reset errors
     setEmptyFields({
       email: false,
       password: false,
@@ -99,7 +99,7 @@ function LoginPage() {
       firstname: false,
       lastname: false,
     }); // Reset empty fields
-    setResetPage("");
+    setResetPage('');
     setLogInDisplay(styles.display);
     setRegInDisplay(styles.display);
   }
@@ -108,8 +108,8 @@ function LoginPage() {
   // Handle form submission for login
   async function handleSubmitLogin(e) {
     e.preventDefault();
-   
-    setErrors(""); // Reset errors before submission
+
+    setErrors(''); // Reset errors before submission
     setEmptyFields({
       email: false,
       password: false,
@@ -117,8 +117,6 @@ function LoginPage() {
       firstname: false,
       lastname: false,
     });
-
-   
 
     // Get values from input fields
     const email = emailDom1.current.value.trim();
@@ -131,7 +129,7 @@ function LoginPage() {
 
     if (Object.keys(newEmptyFields).length > 0) {
       setEmptyFields(newEmptyFields);
-      setErrors("All fields are required.");
+      setErrors('All fields are required.');
 
       // Clear emptyFields after 2 seconds
       setTimeout(() => {
@@ -147,7 +145,7 @@ function LoginPage() {
     }
 
     try {
-      const res = await axiosInstance.post("/users/login", {
+      const res = await axiosInstance.post('/users/login', {
         email,
         password,
       });
@@ -157,26 +155,26 @@ function LoginPage() {
         type: Type.ADD_USER,
         payload: {
           token: res.data.token,
-          user: res.data.user
+          user: res.data.user,
         },
       });
 
       // alert("Login successful!");
 
-      localStorage.setItem("token", res.data.token); // Store token in localStorage
+      localStorage.setItem('token', res.data.token); // Store token in localStorage
 
-      localStorage.setItem("user", JSON.stringify(res.data.user)); // Store user info in localStorage
+      localStorage.setItem('user', JSON.stringify(res.data.user)); // Store user info in localStorage
 
-      navigate("/"); // Redirect to home page after successful login
+      navigate('/'); // Redirect to home page after successful login
 
       console.log(res?.data?.token);
     } catch (error) {
       alert(
-        error?.response?.data?.msg || "Error during login. Please try again."
+        error?.response?.data?.msg || 'Error during login. Please try again.'
       );
-      console.error("Error during Login:", error);
+      console.error('Error during Login:', error);
       setErrors(
-        error?.response?.data?.msg || "An error occurred. Please try again."
+        error?.response?.data?.msg || 'An error occurred. Please try again.'
       );
     }
   }
@@ -184,7 +182,7 @@ function LoginPage() {
   // Handle form submission for registration
   async function handleSubmitSignUp(e) {
     e.preventDefault();
-    setErrors(""); // Reset errors before submission
+    setErrors(''); // Reset errors before submission
     setEmptyFields({
       email: false,
       password: false,
@@ -193,7 +191,6 @@ function LoginPage() {
       lastname: false,
     });
 
-  
     const username = userNameDom.current.value.trim();
     const firstname = firstNameDom.current.value.trim();
     const lastname = lastNameDom.current.value.trim();
@@ -210,7 +207,7 @@ function LoginPage() {
 
     if (Object.keys(newEmptyFields).length > 0) {
       setEmptyFields(newEmptyFields);
-      setErrors("All fields are required.");
+      setErrors('All fields are required.');
 
       // Clear emptyFields after 2 seconds
       setTimeout(() => {
@@ -237,7 +234,7 @@ function LoginPage() {
     }, 2000);
 
     try {
-      await axiosInstance.post("/users/register", {
+      await axiosInstance.post('/users/register', {
         username,
         firstname,
         lastname,
@@ -245,13 +242,13 @@ function LoginPage() {
         password,
       });
 
-      alert("Registration successful! You can now log in.");
+      alert('Registration successful! You can now log in.');
       // navigate("/login"); // Redirect to login page after successful registration
     } catch (error) {
-      alert("Error during sign up. Please try again.");
-      console.error("Error during sign up:", error.message);
+      alert('Error during sign up. Please try again.');
+      console.error('Error during sign up:', error.message);
       setErrors(
-        error?.response?.data?.msg || "An error occurred. Please try again."
+        error?.response?.data?.msg || 'An error occurred. Please try again.'
       );
     }
   }
@@ -261,8 +258,7 @@ function LoginPage() {
       <div className={styles.loginLayout}>
         {/* Left side */}
         <div className={styles.left_side}>
-        
-      <div className={logInDisplay}>
+          <div className={logInDisplay}>
             <h3 className={styles.login_account}>Login to your account</h3>
 
             <p className={styles.alrdy}>
@@ -329,13 +325,13 @@ function LoginPage() {
                 Login
               </button>
             </form>
-          </div>  
+          </div>
           {/* register form */}
           <div className={regInDisplay}>
             <h3 className={styles.join_net}>Join the network</h3>
 
             <p className={styles.alrdy}>
-              Already have an account?{" "}
+              Already have an account?{' '}
               <Link to="" onClick={() => loginPage()}>
                 Sign in
               </Link>
@@ -348,7 +344,7 @@ function LoginPage() {
                 type="email"
                 ref={emailDom2}
                 className={`${styles.email_input} ${
-                  emptyFields.email ? styles.error_bg : ""
+                  emptyFields.email ? styles.error_bg : ''
                 }`}
                 onChange={() =>
                   setEmptyFields({ ...emptyFields, email: false })
@@ -363,7 +359,7 @@ function LoginPage() {
                   id="fname-input"
                   type="text"
                   className={`${styles.f_name} ${
-                    emptyFields.firstname ? styles.error_bg : ""
+                    emptyFields.firstname ? styles.error_bg : ''
                   }`}
                   onChange={() =>
                     setEmptyFields({ ...emptyFields, firstname: false })
@@ -377,7 +373,7 @@ function LoginPage() {
                   id="lname-input"
                   type="text"
                   className={`${styles.l_name} ${
-                    emptyFields.lastname ? styles.error_bg : ""
+                    emptyFields.lastname ? styles.error_bg : ''
                   }`}
                   onChange={() =>
                     setEmptyFields({ ...emptyFields, lastname: false })
@@ -390,7 +386,7 @@ function LoginPage() {
                   ref={userNameDom}
                   type="text"
                   className={`${styles.l_name} ${styles.userName_input} ${
-                    emptyFields.username ? styles.error_bg : ""
+                    emptyFields.username ? styles.error_bg : ''
                   }`}
                   onChange={() =>
                     setEmptyFields({ ...emptyFields, username: false })
@@ -403,9 +399,9 @@ function LoginPage() {
               <div className={styles.paswrd_insert}>
                 <input
                   ref={passwordDom2}
-                  type={showPassword ? "password" : "text"}
+                  type={showPassword ? 'password' : 'text'}
                   className={`${styles.password__input} ${
-                    emptyFields.password ? styles.error_bg : ""
+                    emptyFields.password ? styles.error_bg : ''
                   }`}
                   onChange={() =>
                     setEmptyFields({ ...emptyFields, password: false })
@@ -422,7 +418,7 @@ function LoginPage() {
               </div>
 
               <p className={`${styles.term_policy} ${styles.small}`}>
-                I agree to the <Link to="#">privacy policy</Link> and{" "}
+                I agree to the <Link to="#">privacy policy</Link> and{' '}
                 <Link to="#">terms of service</Link>.
               </p>
 
@@ -444,7 +440,7 @@ function LoginPage() {
               </Link>
             </form>
           </div>
-{/* reset form */}
+          {/* reset form */}
           <div className={`${resetPage} ${styles.reset_con}`}>
             <h4 className={styles.reset_title}>Reset your password</h4>
 
@@ -484,10 +480,9 @@ function LoginPage() {
               </Link>
             </div>
           </div>
-
         </div>
 
-                  {/* Right Side */}
+        {/* Right Side */}
         <div className={styles.right_side}>
           <div className={styles.right_in_contener}>
             <small className="about">About</small>
