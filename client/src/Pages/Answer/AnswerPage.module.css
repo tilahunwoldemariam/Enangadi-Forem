@@ -110,6 +110,19 @@
   color: #555;
 }
 
+.questionLink {
+ 
+  text-align: center;
+  padding: 30px;
+  
+}
+
+.questionLink p{
+text-decoration: none;
+color: #555;
+margin-top: 25px;
+}
+
 .answerInput {
   width: 100%;
   min-height: 100px;
