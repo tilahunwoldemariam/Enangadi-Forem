@@ -6,6 +6,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuestions } from '../../Context/QuestionContext';
 import { FaQuestion } from 'react-icons/fa6';
+import { IoMdArrowRoundUp } from 'react-icons/io';
 
 const Home = () => {
   const [
@@ -106,7 +107,9 @@ const Home = () => {
 
         <div className={styles.secondaryActions}>
           <button onClick={() => searchDom.current.focus()}>🔍</button>
-          <button onClick={() => window.scrollTo(0, 0)}>↑</button>
+          <button onClick={() => window.scrollTo(0, 0)}>
+            <IoMdArrowRoundUp size={30} />
+          </button>
         </div>
       </div>
 
@@ -136,7 +139,9 @@ const Home = () => {
                 <div className={styles.contentColumn}>
                   <h3 className={styles.questionTitle}>{question.title}</h3>
                   <div className={styles.questionMeta}>
-                    <span className={styles.time}>{formatQuestionDate}</span>
+                    <span className={styles.time}>
+                      {formatQuestionDate(question.created_at)}
+                    </span>
                   </div>
                 </div>
               </Link>
