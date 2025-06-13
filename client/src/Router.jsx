@@ -12,7 +12,8 @@ function Router() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   console.log(isAuthenticated);
 
-  const [{ user }, _] = useContext(AuthContext);
+  // const [{ user }, _] = useContext(AuthContext);
+  const user = JSON.parse(localStorage.getItem('user'));
   console.log('user', user);
 
   // Check if user is logged in
@@ -44,19 +45,19 @@ function Router() {
         <Route
           path="/"
           element={
-            isAuthenticated ? <Home /> : <Navigate to="/login" replace />
+            user ? <Home /> : <Navigate to="/login" replace />
           }
         />
         <Route
           path="/ask"
           element={
-            isAuthenticated ? <QuestionPage /> : <Navigate to="/login" replace />
+            user ? <QuestionPage /> : <Navigate to="/login" replace />
           }
         />
         <Route
           path="/questionDetail/:questionid"
           element={
-            isAuthenticated ? <AnswerPage /> : <Navigate to="/login" replace />
+            user ? <AnswerPage /> : <Navigate to="/login" replace />
           }
         />
         <Route path="/login" element={<Login />} />

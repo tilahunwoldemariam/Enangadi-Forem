@@ -1,7 +1,5 @@
-/* Base Styles */
 .container {
   padding: 2rem;
-  /* padding-top: 50px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,7 +13,6 @@
   width: 100%;
 }
 
-/* Typography */
 h1 {
   font-size: 2.2rem;
   font-weight: 700;
@@ -50,28 +47,14 @@ h2 {
 }
 
 /* Welcome Section */
-/* .welcomeSection {
-  background: linear-gradient(135deg, #4b6cb7 0%, #82c4ff 100%);
-  border-radius: 16px;
-  padding: 2.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  max-width: 1400px;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.welcomeContent {
-  position: relative;
-  z-index: 2;
-  color: white;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-} */
-
-/* Welcome Section */
 .welcomeSection {
   background: linear-gradient(135deg, #4b6cb7 0%, #82c4ff 100%);
+   background: linear-gradient(
+    45deg,
+    #8293ea 0%,
+    #a9c9f5 50%,
+    #fca344 100%,
+  );
   border-radius: 16px;
   padding: 2.5rem;
   margin-bottom: 2rem;
@@ -90,7 +73,7 @@ h2 {
 }
 
 .userName {
-  color: #ffd700;
+  color: #fca344;
   font-weight: 700;
 }
 
@@ -102,7 +85,6 @@ h2 {
   margin-bottom: 2rem;
 }
 
-/* Knowledge Bubbles Animation */
 .knowledgeBubbles {
   position: absolute;
   top: 0;
@@ -129,7 +111,6 @@ h2 {
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
-/* Bubble positions and animations */
 .bubble:nth-child(1) {
   top: 10%;
   left: 15%;
@@ -142,14 +123,49 @@ h2 {
 }
 .bubble:nth-child(3) {
   top: 20%;
+  left: 76%;
+  animation-delay: 4s;
+}
+
+.bubble:nth-child(4) {
+  top: 30%;
+  left: 75%;
+  animation-delay: 0s;
+}
+.bubble:nth-child(5) {
+  top: 50%;
+  left: 40%;
+  animation-delay: 2s;
+}
+.bubble:nth-child(6) {
+  top: 20%;
   left: 70%;
   animation-delay: 4s;
 }
-/* Continue positioning other bubbles... */
+.bubble:nth-child(7) {
+  top: 70%;
+  left: 20%;
+  animation-delay: 2s;
+}
+.bubble:nth-child(8) {
+  top: 20%;
+  left: 35%;
+  animation-delay: 4s;
+}
+.bubble:nth-child(9) {
+  top: 70%;
+  left: 65%;
+  animation-delay: 2s;
+}
+.bubble:nth-child(10) {
+  top: 45%;
+  left: 45%;
+  animation-delay: 4s;
+}
 
 @keyframes floatBubble {
   0% {
-    transform: translateY(100px) translateX(0) rotate(0deg);
+    transform: translateY(-100px) translateX(0) rotate(0deg) scale(0.1);
     opacity: 0;
   }
   10% {
@@ -159,7 +175,7 @@ h2 {
     opacity: 0.7;
   }
   100% {
-    transform: translateY(-100px) translateX(50px) rotate(360deg);
+    transform: translateY(100px) translateX(50px) rotate(360deg) scale(1.3);
     opacity: 0;
   }
 }
@@ -186,35 +202,11 @@ h2 {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* .welcomeSection::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 700%;
-  background: linear-gradient(
-    45deg,
-    #516cf0 0%,
-    #a9c9f5 25%,
-    #ff8500 50%,
-    #516cf0 75%,
-    #ff8500 90%,
-    #a9c9f5 100%
-  );
-  background-size: 50% 50%;
-  animation: waterFlow 25s ease-in-out infinite;
-  opacity: 0.15;
-  z-index: -1;
-  border-radius: 70% 70% 70% 70% / 70% 70% 70% 70%;
-} */
-
 .welcomeContent {
   position: relative;
   z-index: 2;
 }
 
-/* Buttons */
 .askButton {
   display: inline-flex;
   align-items: center;
@@ -240,7 +232,6 @@ h2 {
   font-size: 1.2rem;
 }
 
-/* Questions Section */
 .questionsSection {
   background-color: white;
   border-radius: 16px;
@@ -258,7 +249,6 @@ h2 {
   gap: 1.25rem;
 }
 
-/* Question Cards */
 .questionCard {
   display: flex;
   gap: 1.5rem;
@@ -326,7 +316,6 @@ h2 {
   color: #666;
 }
 
-/* Floating Actions */
 .floatingActions {
   position: fixed;
   bottom: 2rem;
@@ -405,27 +394,7 @@ h2 {
 .searchInput:focus {
   outline: none;
   border-color: #516cf0;
-  box-shadow: 0 2px 12px rgba(81, 108, 240, 0.2);
-}
-
-.searchButton {
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.searchIcon {
-  width: 24px;
-  height: 24px;
-  fill: #516cf0;
+  box-shadow: 0 4px 12px rgba(81, 108, 240, 0.2);
 }
 
 .clearButton {
@@ -444,104 +413,6 @@ h2 {
 
 .clearButton:hover {
   color: #f44336;
-}
-
-/* Loading States */
-.loadingState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-  gap: 1rem;
-}
-
-.searchSpinner,
-.loadingState .spinner {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(81, 108, 240, 0.3);
-  border-radius: 50%;
-  border-top-color: #516cf0;
-  animation: spin 1s linear infinite;
-}
-
-.loadingState .spinner {
-  width: 40px;
-  height: 40px;
-  border-width: 4px;
-}
-
-/* Status Indicators */
-.statusIndicator {
-  position: absolute;
-  left: 1rem;
-  top: 1.5rem;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
-.statusIndicator[data-status='answered'] {
-  background: #4caf50;
-  color: white;
-}
-
-.statusIndicator[data-status='unanswered'] {
-  background: #f44336;
-  color: white;
-}
-
-/* Tags */
-.tags {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.tag {
-  background: #f0f2f5;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-}
-
-/* No Results */
-.noResults {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-}
-
-.clearSearch {
-  margin-top: 1rem;
-  background: none;
-  border: none;
-  color: #516cf0;
-  text-decoration: underline;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.clearSearch:hover {
-  color: #3a56c8;
-}
-
-/* Animations */
-@keyframes waterFlow {
-  0% {
-    transform: rotate(10deg);
-  }
-  50% {
-    transform: rotate(130deg);
-  }
-  100% {
-    transform: rotate(10deg);
-  }
 }
 
 @keyframes spin {
