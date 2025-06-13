@@ -6,6 +6,7 @@ import Home from './Pages/Home/Home';
 import { AuthContext } from './Context/Context';
 import QuestionPage from './Pages/Questionpage/Questionpage'
 import Shared from './Components/Shared/Shared';
+import AnswerPage from './Pages/Answer/AnswerPage';
 
 function Router() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -50,6 +51,12 @@ function Router() {
           path="/ask"
           element={
             isAuthenticated ? <QuestionPage /> : <Navigate to="/login" replace />
+          }
+        />
+        <Route
+          path="/questionDetail/:questionid"
+          element={
+            isAuthenticated ? <AnswerPage /> : <Navigate to="/login" replace />
           }
         />
         <Route path="/login" element={<Login />} />
