@@ -154,14 +154,17 @@ function LoginPage() {
       dispatch({
         type: Type.ADD_USER,
         payload: {
-          token: res.data.token,
-          user: res.data.user,
+          token: localStorage.getItem('token'),
+          user: JSON.parse(localStorage.getItem('user')),
         },
       });
 
       localStorage.setItem('token', res.data.token); // Store token in localStorage
 
       localStorage.setItem('user', JSON.stringify(res.data.user)); // Store user info in localStorage
+
+      console.log(`token from local storage: ${localStorage.getItem('token')}`);
+      console.log(`user from local storage: ${JSON.parse(localStorage.getItem('user'))}`);
 
       navigate('/'); // Redirect to home page after successful login
 

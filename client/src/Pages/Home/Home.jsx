@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import styles from './Home.module.css';
 import { AuthContext } from '../../Context/Context';
 import axiosInstance from '../../Api/axiosConfig';
@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useQuestions } from '../../Context/QuestionContext';
 import { FaQuestion } from 'react-icons/fa6';
 import { IoMdArrowRoundUp } from 'react-icons/io';
+import { ClipLoader } from 'react-spinners';
 
 const Home = () => {
   const [
@@ -16,6 +17,8 @@ const Home = () => {
     },
     _,
   ] = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true);
+
   const { questions, allQuestions, setQuestions, searchQuery, setSearchQuery } =
     useQuestions();
   
@@ -27,13 +30,18 @@ const Home = () => {
 
   useEffect(() => {
     const fetchQuestions = async () => {
+      setIsLoading(true);
       try {
         const res = await axiosInstance.get('/questions/all-questions', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setQuestions(res.data.questions);
+        setTimeout(() => {
+          // setIsLoading(false);
+        }, 1500);
       } catch (error) {
         console.error('Error fetching questions:', error);
+        setIsLoading(false);
       }
     };
 
@@ -122,31 +130,35 @@ const Home = () => {
         </div>
 
         <div className={styles.questionsList}>
-          {questions?.map((question) => {
-            return (
-              <Link
-                to={`/questionDetail/${question.question_id}`}
-                key={question.id}
-                className={styles.questionCard}
-              >
-                <div className={styles.userColumn}>
-                  <div className={styles.avatar}>
-                    {question.firstname.charAt(0).toUpperCase()}
+          {isLoading ? (
+            <ClipLoader />
+          ) : (
+            questions?.map((question) => {
+              return (
+                <Link
+                  to={`/questionDetail/${question.question_id}`}
+                  key={question.id}
+                  className={styles.questionCard}
+                >
+                  <div className={styles.userColumn}>
+                    <div className={styles.avatar}>
+                      {question.firstname.charAt(0).toUpperCase()}
+                    </div>
+                    <span className={styles.username}>{question.username}</span>
                   </div>
-                  <span className={styles.username}>{question.username}</span>
-                </div>
 
-                <div className={styles.contentColumn}>
-                  <h3 className={styles.questionTitle}>{question.title}</h3>
-                  <div className={styles.questionMeta}>
-                    <span className={styles.time}>
-                      {formatQuestionDate(question.created_at)}
-                    </span>
+                  <div className={styles.contentColumn}>
+                    <h3 className={styles.questionTitle}>{question.title}</h3>
+                    <div className={styles.questionMeta}>
+                      <span className={styles.time}>
+                        {formatQuestionDate(question.created_at)}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })
+          )}
         </div>
       </section>
     </main>

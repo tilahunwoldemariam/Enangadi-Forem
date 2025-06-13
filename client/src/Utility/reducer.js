@@ -1,14 +1,14 @@
 import { Type } from "./actionType";
 
-const initial = { user: null, token: null };
+const initial = { user: JSON.parse(localStorage.getItem('user')) || null, token: localStorage.getItem('token') || null };
 
 function reducer(state, action) {
   switch (action.type) {
     case Type.ADD_USER:
       return {
         ...state,
-        user: action.payload.user, // Save the username
-        token: action.payload.token, // Save the token
+        user: JSON.parse(localStorage.getItem('user')) || action.payload.user, // Save the username
+        token: localStorage.getItem('token') || action.payload.token, // Save the token
       };
 
     case Type.REMOVE_USER:
