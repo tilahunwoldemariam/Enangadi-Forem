@@ -1,10 +1,11 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import styles from './Home.module.css';
 import { AuthContext } from '../../Context/Context';
 import axiosInstance from '../../Api/axiosConfig';
-import { useState } from 'react';
 import { format, formatDistanceToNow } from "date-fns";
 import { Link, useNavigate } from 'react-router-dom';
+import { useQuestions } from '../../Context/QuestionContext';
+import { FaQuestion } from 'react-icons/fa6';
 
 const Home = () => {
   const [
@@ -14,28 +15,40 @@ const Home = () => {
     },
     _,
   ] = useContext(AuthContext);
+  const { questions, allQuestions, setQuestions, searchQuery, setSearchQuery } =
+    useQuestions();
   
-  const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
+  const searchDom = useRef(null);
 
   const userFirstName =
     firstname.charAt(0).toUpperCase() + firstname.slice(1).toLowerCase();
 
   useEffect(() => {
-    async function fetchQuestions() {
-      const res = await axiosInstance.get('/questions/all-questions', {
-        headers: {
-          Authorization: ` Bearer ${token}`,
-        },
-      });
-      console.log(res);
-      setQuestions(res.data.questions);
-    }
+    const fetchQuestions = async () => {
+      try {
+        const res = await axiosInstance.get('/questions/all-questions', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setQuestions(res.data.questions);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      }
+    };
+
     fetchQuestions();
-  }, [questions, token]);
+  }, [token, setQuestions]);
+
+  const formatQuestionDate = (dateString) => {
+    const postedTime = new Date(dateString);
+    const timeAgo = formatDistanceToNow(postedTime, { addSuffix: true });
+    const formattedDate = format(postedTime, 'MMM d');
+    return `${timeAgo} • ${formattedDate}`;
+  };
 
   return (
     <main className={styles.container}>
+      {/* Welcome Section */}
       <section className={styles.welcomeSection}>
         <div className={styles.welcomeContent}>
           <h1>
@@ -46,42 +59,45 @@ const Home = () => {
             Ready to dive into today's coding challenges? Ask questions, share
             knowledge, and learn together!
           </p>
-
-          <Link to="/ask">
-            <button className={styles.askButton}>
-              <span className={styles.plusIcon}>+</span> Ask a Question
-            </button>
+          <Link to="/ask" className={styles.askButton}>
+            <span className={styles.plusIcon}>+</span> Ask a Question
           </Link>
+        </div>
+        <div className={styles.knowledgeBubbles}>
+          {Array.from({ length: 10 }).map((_, index) => (
+            <div key={index} className={styles.bubble}>
+              <FaQuestion size={40} className={styles.questionIcon} />
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Search bar */}
-      {/* <section className={styles.searchSection}>
-        <form onSubmit={handleSearch} className={styles.searchForm}>
-          <div className={styles.searchContainer}>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search questions..."
-              className={styles.searchInput}
-            />
+      {/* Search Bar */}
+      <section className={styles.searchSection}>
+        <div className={styles.searchContainer}>
+          <input
+            type="text"
+            ref={searchDom}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search questions by title..."
+            className={styles.searchInput}
+          />
+          {searchQuery && (
             <button
-              type="submit"
-              className={styles.searchButton}
-              disabled={isSearching}
+              onClick={() => setSearchQuery('')}
+              className={styles.clearButton}
             >
-              {isSearching ? (
-                <span className={styles.searchSpinner}></span>
-              ) : (
-                <svg className={styles.searchIcon} viewBox="0 0 24 24">
-                  <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                </svg>
-              )}
+              ×
             </button>
-          </div>
-        </form>
-      </section> */}
+          )}
+        </div>
+        {searchQuery && (
+          <p className={styles.searchResults}>
+            Found {questions.length} of {allQuestions.length} questions
+          </p>
+        )}
+      </section>
 
       <div className={styles.floatingActions}>
         <button className={styles.mainAction} onClick={() => navigate('/ask')}>
@@ -89,7 +105,7 @@ const Home = () => {
         </button>
 
         <div className={styles.secondaryActions}>
-          <button onClick={() => navigate('/search')}>🔍</button>
+          <button onClick={() => searchDom.current.focus()}>🔍</button>
           <button onClick={() => window.scrollTo(0, 0)}>↑</button>
         </div>
       </div>
@@ -103,36 +119,29 @@ const Home = () => {
         </div>
 
         <div className={styles.questionsList}>
-          { questions?.map(
-            (question) => {
-              const postedTime = new Date(question.created_at);
-              const timeAgo = formatDistanceToNow(postedTime, {
-                addSuffix: true,
-              });
-
-              const formattedDate = format(postedTime, 'MMM d');
-
-              const fullText = `${timeAgo} • ${formattedDate}`;
-
-              return (
-                <article key={question.id} className={styles.questionCard}>
-                  <div className={styles.userColumn}>
-                    <div className={styles.avatar}>
-                      {question.firstname.charAt(0).toUpperCase()}
-                    </div>
-                    <span className={styles.username}>{question.username}</span>
+          {questions?.map((question) => {
+            return (
+              <Link
+                to={`/questionDetail/${question.question_id}`}
+                key={question.id}
+                className={styles.questionCard}
+              >
+                <div className={styles.userColumn}>
+                  <div className={styles.avatar}>
+                    {question.firstname.charAt(0).toUpperCase()}
                   </div>
+                  <span className={styles.username}>{question.username}</span>
+                </div>
 
-                  <div className={styles.contentColumn}>
-                    <h3 className={styles.questionTitle}>{question.title}</h3>
-                    <div className={styles.questionMeta}>
-                      <span className={styles.time}>{fullText}</span>
-                    </div>
+                <div className={styles.contentColumn}>
+                  <h3 className={styles.questionTitle}>{question.title}</h3>
+                  <div className={styles.questionMeta}>
+                    <span className={styles.time}>{formatQuestionDate}</span>
                   </div>
-                </article>
-              );
-            }
-          )}
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
     </main>
