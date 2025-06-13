@@ -25,8 +25,6 @@ function LoginPage() {
   // State to manage password visibility
   const [showPassword, setShowPassword] = useState(true);
 
-  const navigate = useNavigate();
-
   // Ref for email input field
   const emailDom1 = useRef(null);
 
@@ -51,8 +49,10 @@ function LoginPage() {
   // Ref for password input field in registration form
   const passwordDom2 = useRef(null);
 
-  // // Navigate hook for programmatic navigation
-  // const navigate = useNavigate();
+  const passwordDom3 = useRef();
+
+  // Navigate hook for programmatic navigation
+  const navigate = useNavigate();
 
   // Empty fields for error display
   const [emptyFields, setEmptyFields] = useState({
@@ -159,8 +159,6 @@ function LoginPage() {
         },
       });
 
-      // alert("Login successful!");
-
       localStorage.setItem('token', res.data.token); // Store token in localStorage
 
       localStorage.setItem('user', JSON.stringify(res.data.user)); // Store user info in localStorage
@@ -252,6 +250,49 @@ function LoginPage() {
       );
     }
   }
+
+  async function handlePasswordReset(e) {
+    e.preventDefault();
+    setErrors('');
+    const email = emailDom3.current.value.trim();
+    const password = passwordDom3.current.value.trim();
+
+    const empty = {
+      email: !email,
+      password: !password,
+    };
+    setEmptyFields(empty);
+
+    if (!email || !password) {
+      setErrors('Please fill in all fields.');
+      setTimeout(() => setEmptyFields({ email: false, password: false }), 2000);
+      return;
+    }
+
+    if (password.length <= 8) {
+      setErrors('Password must be at least 8 characters.');
+      setEmptyFields({ password: true });
+      setTimeout(() => setEmptyFields({ password: false }), 2000);
+      return;
+    }
+
+    try {
+      await axiosInstance.post('/users/reset-password', {
+        email,
+        newPassword: password,
+      });
+      alert('Password reset successfully. You can now log in.');
+      setResetPage(styles.display); // hide reset page
+      setLogInDisplay(''); // show login page
+    } catch (error) {
+      console.error('Password reset error:', error);
+      setErrors(
+        error?.response?.data?.msg || 'Error resetting password. Try again.'
+      );
+    }
+  }
+
+
 
   return (
     <section className={styles.main__bg}>
@@ -443,37 +484,49 @@ function LoginPage() {
             <h4 className={styles.reset_title}>Reset your password</h4>
 
             <p className={styles.reset__desc}>
-              Fill in your e-mail address below and we will send you an email
-              with further instructions.
+              Enter your email and new password below to reset it.
             </p>
 
-            <input
-              ref={emailDom3}
-              type="email"
-              className={styles.email_input}
-              onChange={() => setEmptyFields({ ...emptyFields, email: false })}
-              name="emailaddress"
-              placeholder="Email address"
-            />
+            <form onSubmit={handlePasswordReset}>
+              <input
+                ref={emailDom3}
+                type="email"
+                className={`${styles.email_input} ${
+                  emptyFields.email ? styles.error_bg : ''
+                }`}
+                onChange={() =>
+                  setEmptyFields((prev) => ({ ...prev, email: false }))
+                }
+                name="emailaddress"
+                placeholder="Email address"
+              />
 
-            <button className={`${styles.butn_login} butn_login`} type="submit">
-              Reset your password
-            </button>
+              <input
+                ref={passwordDom3}
+                type="password"
+                className={`${styles.email_input} ${
+                  emptyFields.password ? styles.error_bg : ''
+                }`}
+                onChange={() =>
+                  setEmptyFields((prev) => ({ ...prev, password: false }))
+                }
+                name="newpassword"
+                placeholder="New password"
+              />
+
+              <button
+                className={`${styles.butn_login} butn_login`}
+                type="submit"
+              >
+                Reset your password
+              </button>
+            </form>
 
             <div className={styles.links}>
-              <Link
-                data-panel=".panel-login"
-                to="#"
-                onClick={() => loginPage()}
-              >
+              <Link to="#" onClick={() => loginPage()}>
                 Already have an account?
               </Link>
-
-              <Link
-                data-panel=".panel-signup"
-                to="#"
-                onClick={() => registerPage()}
-              >
+              <Link to="#" onClick={() => registerPage()}>
                 Don’t have an account?
               </Link>
             </div>

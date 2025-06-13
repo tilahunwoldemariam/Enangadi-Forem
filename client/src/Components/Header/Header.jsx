@@ -6,7 +6,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { useContext } from "react";
 import { AuthContext } from "../../Context/Context";
 import { Type } from "../../Utility/actionType";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 
@@ -28,9 +28,9 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
-      <div className={styles.logo}>
+      <Link to='/' className={styles.logo}>
         <img src={logo} alt="evangadi_logo" />
-      </div>
+      </Link>
 
       <button className={styles.menuToggle} onClick={toggleMenu}>
         <RxHamburgerMenu color="#FF8500" />
@@ -44,18 +44,18 @@ const Header = () => {
         <button className={styles.closeButton} onClick={closeMenu}>
           <IoCloseSharp size={30} />
         </button>
-        <div className={styles.mobile_logo}>
+        <Link to='/' className={styles.mobile_logo}>
           <img src={logo} alt="" />
-        </div>
-        <a href="/" onClick={closeMenu}>
+        </Link>
+        <Link to="/" onClick={closeMenu}>
           Home
-        </a>
-        <a href="#" onClick={closeMenu}>
+        </Link>
+        <Link to="#" onClick={closeMenu}>
           How it works
-        </a>
+        </Link>
 
         {user ? (
-          <a
+          <Link
             onClick={() => {
               onSignOut();
               closeMenu();
@@ -63,18 +63,18 @@ const Header = () => {
             className={styles.btn}
           >
             Log out
-          </a>
+          </Link>
         ) : (
           
-          <a href="/signin" onClick={closeMenu} className={styles.btn}>
+          <Link to="/signin" onClick={closeMenu} className={styles.btn}>
             sign In
-          </a>
+          </Link>
         )}
       </nav>
 
       <div className={styles.nav_links}>
-        <a href="/">Home</a>
-        <a href="#">How it works</a>
+        <Link to="/">Home</Link>
+        <Link to="/how-it-works">How it works</Link>
         <div className={styles.auth_button}>
           {user ? (
             <button onClick={onSignOut} className={styles.btn}>

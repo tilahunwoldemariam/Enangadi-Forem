@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import axiosInstance from './Api/axiosConfig';
-import Login from './Pages/LoginPage/LoginPage';
-import Home from './Pages/Home/Home';
+import Login from './pages/LoginPage/LoginPage';
+import Home from './pages/Home/Home';
 import { AuthContext } from './Context/Context';
-import QuestionPage from './Pages/Questionpage/Questionpage'
+import QuestionPage from './pages/Questionpage/Questionpage'
 import Shared from './Components/Shared/Shared';
-import AnswerPage from './Pages/Answer/AnswerPage';
+import AnswerPage from './pages/Answer/AnswerPage';
 
 function Router() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

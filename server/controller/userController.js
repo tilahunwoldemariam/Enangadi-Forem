@@ -106,4 +106,52 @@ async function checkUser(req, res) {
     .json({ msg: 'User is authenticated', username, userid });
 }
 
-module.exports = { register, loginUser, checkUser };
+// Reset password without token — just with email
+async function resetPassword(req, res) {
+  const { email, newPassword } = req.body;
+
+  if (!email || !newPassword) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      msg: 'Please provide email and new password',
+    });
+  }
+
+  if (newPassword.length <= 8) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      msg: 'Password should be at least 8 characters',
+    });
+  }
+
+  try {
+    const [user] = await dbConnection.query(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
+
+    if (user.length === 0) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        msg: 'User not found with this email',
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await dbConnection.query(
+      'UPDATE users SET password = ? WHERE email = ?',
+      [hashedPassword, email]
+    );
+
+    return res.status(StatusCodes.OK).json({
+      msg: 'Password updated successfully',
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      msg: 'Server error',
+    });
+  }
+}
+
+
+module.exports = { register, loginUser, checkUser, resetPassword };

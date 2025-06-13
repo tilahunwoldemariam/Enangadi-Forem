@@ -6,6 +6,7 @@ const {
   register,
   loginUser,
   checkUser,
+  resetPassword,
 } = require('../controller/userController');
 const authMiddleware = require('../middleware/authMiddleware');
 
@@ -17,5 +18,8 @@ router.post('/login', loginUser);
 
 //user check router
 router.get('/check', authMiddleware, checkUser);
+
+// password reset
+router.post('/reset-password', resetPassword);
 
 module.exports = router;
