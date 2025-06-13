@@ -122,7 +122,7 @@ const Home = () => {
           {questions?.map((question) => {
             return (
               <Link
-                to={`//questionDetail/${question.question_id}`}
+                to={`/questionDetail/${question.question_id}`}
                 key={question.id}
                 className={styles.questionCard}
               >
