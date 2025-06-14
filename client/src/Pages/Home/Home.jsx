@@ -17,7 +17,7 @@ const Home = () => {
     },
     _,
   ] = useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { questions, allQuestions, setQuestions, searchQuery, setSearchQuery } =
     useQuestions();
@@ -36,9 +36,7 @@ const Home = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setQuestions(res.data.questions);
-        setTimeout(() => {
-          // setIsLoading(false);
-        }, 1500);
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching questions:', error);
         setIsLoading(false);
