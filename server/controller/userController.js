@@ -25,15 +25,13 @@ async function register(req, res) {
         msg: 'Please, provide full information',
       });
     }
-    if (password.length <= 8) {
+    if (password.length < 8) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         msg: 'password length should be at least 8 character',
       });
     }
     const genString = await bcrypt.genSalt(10);
-    // console.log(genString);
     const hashedPswrd = await bcrypt.hash(password, genString);
-    // console.log(hashedPswrd);
 
     await dbConnection.query(
       `INSERT INTO users (username, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)`,
@@ -56,7 +54,7 @@ async function loginUser(req, res) {
   if (!email || !password) {
     return res.status(400).json({
       error: 'Bad Request',
-      message: 'Please provide all required fields!',
+      msg: 'Please provide all required fields!',
     });
   }
   try {
@@ -67,14 +65,14 @@ async function loginUser(req, res) {
     if (user.length === 0) {
       return res.status(401).json({
         error: 'Unauthorized',
-        message: 'Invalid credential',
+        msg: 'Invalid credential',
       });
     }
     const isMatch = await bcrypt.compare(password, user[0].password);
     if (!isMatch) {
       return res.status(401).json({
         error: 'Unauthorized',
-        message: 'Invalid password',
+        msg: 'Invalid password',
       });
     }
     const username = user[0].username;
@@ -84,7 +82,7 @@ async function loginUser(req, res) {
       expiresIn: '1h',
     });
     res.status(200).json({
-      message: 'User login successful',
+      msg: 'User login successful',
       token,
       user: {
         username,

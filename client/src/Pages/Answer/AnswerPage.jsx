@@ -47,16 +47,22 @@
  import React, { useContext, useEffect, useRef, useState } from "react";
 import classes from "./AnswerPage.module.css";
 import axiosBase from "../../Api/axiosConfig";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { AuthContext } from "../../Context/Context";
+
 
 const AnswerPage = () => {
   const {questionid} = useParams()
   const [{token}, _] = useContext(AuthContext)
   const [question, setQuestion] = useState({});
+  const [answers, setAnswers] = useState([])
   const AnswerDom = useRef(null)
-console.log(question)
-console.log(questionid)
+
+// console.log(question)
+// console.log(questionid)
+      const posted = useRef(null);
+      
+
   useEffect(()=>{
      async function fetchSingleQuestion() {
      const res =await axiosBase.get(`/questions/${questionid}`,{
@@ -69,6 +75,30 @@ console.log(questionid)
      }
      fetchSingleQuestion()
   }, [])
+
+  
+  useEffect(()=>{
+   async function fetchAnswer(){
+
+     try {
+      const res = await axiosBase.get(`/answers/${questionid}`,{
+
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+
+      })
+//  console.log(res)
+      setAnswers(res.data.answer)
+      
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  fetchAnswer()
+  
+  },[question, answers])
+
   async function handlePostAnswer(e) {
     e.preventDefault()
 
@@ -81,7 +111,13 @@ console.log(answer)
         }
 
       })
-      alert ("Successfully Submitted")
+
+      AnswerDom.current.value = ""
+
+     posted.current.style.display = 'block';
+      setTimeout(() => {
+        posted.current.style.display = 'none';
+      }, 2000);
  } catch(err){
   alert ("Error on submission")
   console.error(err)
@@ -110,21 +146,30 @@ console.log(answer)
      <hr style={{ border: "none", borderTop: "2px solid #e0e0e0", margin: "20px 0" }} />
 
       <div className={classes.answerSection}>
-        <div className={classes.userCard}>
+        {
+         answers?.map((answer,i)=><div className={classes.userCard} key={i}>
           <div className={classes.userAvatar}>👤</div>
           <div>
-            <div className={classes.userAnswer}>programming language</div>
-            <div className={classes.userName}>{question.username}</div>
+            <div className={classes.userAnswer}>{answer.content}</div>
+            <div className={classes.userName}>{answer.username}</div>
           </div>
-        </div>
+        </div>)
+        }
       </div>
 
+
+                <div className={classes.questionLink}>
+                  <h4>Answer The Top Question </h4>
+                 <Link to="/"> <p>Go to Question Page </p></Link>
+                </div>
+        
       <form onSubmit={handlePostAnswer}>
         <textarea
           className={classes.answerInput}
           ref={AnswerDom}
           placeholder="Your answer ..."
         ></textarea>
+        <div ref={posted} style={{color:"green", padding: "10px", display:"none"}}> Your Answer is Posted Successfully !!</div>
         <button className={classes.postAnswerBtn} type="submit">
           Post Answer
         </button>
