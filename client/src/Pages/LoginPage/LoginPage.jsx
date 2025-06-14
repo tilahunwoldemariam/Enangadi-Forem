@@ -244,12 +244,11 @@ function LoginPage() {
       });
 
       alert('Registration successful! You can now log in.');
-      // navigate("/login"); // Redirect to login page after successful registration
+      loginPage(); // Redirect to login page after successful registration
     } catch (error) {
-      alert('Error during sign up. Please try again.');
-      console.error('Error during sign up:', error.message);
+      console.error("Error during sign up:", error.response.data.msg);
       setErrors(
-        error?.response?.data?.msg || 'An error occurred. Please try again.'
+        error.response.data.msg || 'An error occurred. Please try again.'
       );
     }
   }
@@ -306,7 +305,7 @@ function LoginPage() {
             <h3 className={styles.login_account}>Login to your account</h3>
 
             <p className={styles.alrdy}>
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <Link
                 to=""
                 className={styles.creat_account}
@@ -324,7 +323,7 @@ function LoginPage() {
                 type="email"
                 ref={emailDom1}
                 className={`${styles.email_input} ${styles.email_input_login} ${
-                  emptyFields.email ? styles.error_bg : ''
+                  emptyFields.email ? styles.error_bg : ""
                 }`}
                 onChange={() =>
                   setEmptyFields({ ...emptyFields, email: false })
@@ -333,10 +332,10 @@ function LoginPage() {
               />
 
               <input
-                type={showPassword ? 'password' : 'text'}
+                type={showPassword ? "password" : "text"}
                 ref={passwordDom1}
                 className={`${styles.password__input} ${
-                  emptyFields.password ? styles.error_bg : ''
+                  emptyFields.password ? styles.error_bg : ""
                 }`}
                 onChange={() =>
                   setEmptyFields({ ...emptyFields, password: false })
@@ -374,7 +373,7 @@ function LoginPage() {
             <h3 className={styles.join_net}>Join the network</h3>
 
             <p className={styles.alrdy}>
-              Already have an account?{' '}
+              Already have an account?{" "}
               <Link to="" onClick={() => loginPage()}>
                 Sign in
               </Link>
@@ -387,7 +386,7 @@ function LoginPage() {
                 type="email"
                 ref={emailDom2}
                 className={`${styles.email_input} ${
-                  emptyFields.email ? styles.error_bg : ''
+                  emptyFields.email ? styles.error_bg : ""
                 }`}
                 onChange={() =>
                   setEmptyFields({ ...emptyFields, email: false })
@@ -402,7 +401,7 @@ function LoginPage() {
                   id="fname-input"
                   type="text"
                   className={`${styles.f_name} ${
-                    emptyFields.firstname ? styles.error_bg : ''
+                    emptyFields.firstname ? styles.error_bg : ""
                   }`}
                   onChange={() =>
                     setEmptyFields({ ...emptyFields, firstname: false })
@@ -416,7 +415,7 @@ function LoginPage() {
                   id="lname-input"
                   type="text"
                   className={`${styles.l_name} ${
-                    emptyFields.lastname ? styles.error_bg : ''
+                    emptyFields.lastname ? styles.error_bg : ""
                   }`}
                   onChange={() =>
                     setEmptyFields({ ...emptyFields, lastname: false })
@@ -429,7 +428,7 @@ function LoginPage() {
                   ref={userNameDom}
                   type="text"
                   className={`${styles.l_name} ${styles.userName_input} ${
-                    emptyFields.username ? styles.error_bg : ''
+                    emptyFields.username ? styles.error_bg : ""
                   }`}
                   onChange={() =>
                     setEmptyFields({ ...emptyFields, username: false })
@@ -442,9 +441,9 @@ function LoginPage() {
               <div className={styles.paswrd_insert}>
                 <input
                   ref={passwordDom2}
-                  type={showPassword ? 'password' : 'text'}
+                  type={showPassword ? "password" : "text"}
                   className={`${styles.password__input} ${
-                    emptyFields.password ? styles.error_bg : ''
+                    emptyFields.password ? styles.error_bg : ""
                   }`}
                   onChange={() =>
                     setEmptyFields({ ...emptyFields, password: false })
@@ -461,8 +460,15 @@ function LoginPage() {
               </div>
 
               <p className={`${styles.term_policy} ${styles.small}`}>
-                I agree to the <Link to="#">privacy policy</Link> and{' '}
-                <Link to="#">terms of service</Link>.
+                I agree to the{" "}
+                <Link to="https://legacy.evangadi.com/legal/privacy/">
+                  privacy policy
+                </Link>{" "}
+                and{" "}
+                <Link to="https://legacy.evangadi.com/legal/terms/">
+                  terms of service
+                </Link>
+                .
               </p>
 
               <button
@@ -495,7 +501,7 @@ function LoginPage() {
                 ref={emailDom3}
                 type="email"
                 className={`${styles.email_input} ${
-                  emptyFields.email ? styles.error_bg : ''
+                  emptyFields.email ? styles.error_bg : ""
                 }`}
                 onChange={() =>
                   setEmptyFields((prev) => ({ ...prev, email: false }))
@@ -508,7 +514,7 @@ function LoginPage() {
                 ref={passwordDom3}
                 type="password"
                 className={`${styles.email_input} ${
-                  emptyFields.password ? styles.error_bg : ''
+                  emptyFields.password ? styles.error_bg : ""
                 }`}
                 onChange={() =>
                   setEmptyFields((prev) => ({ ...prev, password: false }))
