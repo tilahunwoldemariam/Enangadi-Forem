@@ -26,12 +26,11 @@ async function postAnswers(req, res) {
       msg: "An unexpected error occurred",
     });
   }
-  // res.send("answer")
 }
 
 async function getAllAnswer(req, res) {
   const questionId = req.params.question_Id;
-  // console.log(answerId);
+  
   try {
     const [results] = await dbConnection.query(
       `SELECT 
