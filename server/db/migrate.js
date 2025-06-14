@@ -1,4 +1,4 @@
-const dbConnection = require("./dbConfig");
+const dbConnection = require('./dbConfig');
 
 async function createdbTable(req, res) {
   let userTable = `CREATE TABLE users(
@@ -41,10 +41,10 @@ async function createdbTable(req, res) {
 
     await dbConnection.query(answersTable);
 
-    res.end("Tables created successfully");
+    res.end('Tables created successfully');
   } catch (error) {
     console.error(`Error creating tables: ${error.message}`);
-    res.status(500).send("Error creating tables");
+    res.status(500).send('Error creating tables');
   }
 }
 

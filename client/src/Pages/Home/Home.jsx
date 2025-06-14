@@ -113,7 +113,7 @@ const Home = () => {
 
         <div className={styles.secondaryActions}>
           <button onClick={() => searchDom.current.focus()}>🔍</button>
-          <button onClick={() => window.scrollTo(0, 0)}>
+          <button onClick={() => window.scrollTo({top: 0, left: 0, behavior: 'smooth'})}>
             <IoMdArrowRoundUp size={30} />
           </button>
         </div>
