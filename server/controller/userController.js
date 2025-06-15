@@ -79,7 +79,7 @@ async function loginUser(req, res) {
     const userid = user[0].userid;
     const firstname = user[0].firstname;
     const token = jwt.sign({ username, userid }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
+      expiresIn: '1d',
     });
     res.status(200).json({
       msg: 'User login successful',
@@ -91,7 +91,7 @@ async function loginUser(req, res) {
       },
     });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ msg: 'Server error' });
     console.error(err.message);
   }
 }

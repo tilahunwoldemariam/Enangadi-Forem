@@ -8,6 +8,7 @@ import { useQuestions } from '../../Context/QuestionContext';
 import { FaQuestion } from 'react-icons/fa6';
 import { IoMdArrowRoundUp } from 'react-icons/io';
 import { ClipLoader } from 'react-spinners';
+import { toast } from 'react-toastify';
 
 const Home = () => {
   const [
@@ -39,6 +40,7 @@ const Home = () => {
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching questions:', error);
+        toast.error('Error fetching questions:', error.response.data.mgs);
         setIsLoading(false);
       }
     };
@@ -112,7 +114,7 @@ const Home = () => {
         </button>
 
         <div className={styles.secondaryActions}>
-          <button onClick={() => searchDom.current.focus()}>🔍</button>
+          <button onClick={() => { searchDom.current.focus(); window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });}}>🔍</button>
           <button onClick={() => window.scrollTo({top: 0, left: 0, behavior: 'smooth'})}>
             <IoMdArrowRoundUp size={30} />
           </button>
@@ -135,7 +137,7 @@ const Home = () => {
               return (
                 <Link
                   to={`/questionDetail/${question.question_id}`}
-                  key={question.id}
+                  key={question.question_id}
                   className={styles.questionCard}
                 >
                   <div className={styles.userColumn}>

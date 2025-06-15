@@ -5,6 +5,7 @@ import { AuthContext } from '../../../Context/Context';
 import { useNavigate, Link } from 'react-router-dom';
 import { useRef } from 'react';
 import axiosBase from '../../../api/axiosConfig';
+import { toast } from 'react-toastify';
 
 const QuestionForm = () => {
   const [{ token }, _] = useContext(AuthContext);
@@ -61,9 +62,9 @@ const QuestionForm = () => {
       setTimeout(() => {
         navigate('/');
         posted.current.style.display = 'none';
-      }, 2000);
+      }, 1500);
     } catch (error) {
-      alert('Failed to post question.');
+      toast.error(error.response.data.msg);
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -86,7 +87,6 @@ const QuestionForm = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Be specific and imagine you're asking a question to another person"
-          required
           className={styles.input}
         />
         <p className={styles.helpText}>
@@ -105,7 +105,6 @@ const QuestionForm = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Include all the information someone would need to answer your question"
-            required
             className={styles.textarea}
             maxLength={500}
           />

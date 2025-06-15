@@ -27,7 +27,7 @@ const AnswerPage = () => {
         });
         setQuestion(res.data.question);
       } catch (error) {
-        console.error(error);
+        console.error(error.response.data.msg);
       } finally {
         setIsLoading(false);
       }
@@ -74,7 +74,7 @@ const AnswerPage = () => {
       });
       setAnswers(res.data.answer);
     } catch (err) {
-      console.error(err);
+      console.error(err.response.data.msg);
     } finally {
       setIsPosting(false);
     }
