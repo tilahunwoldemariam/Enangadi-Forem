@@ -5,19 +5,18 @@ import { AuthContext } from '../../../Context/Context';
 import { useNavigate, Link } from 'react-router-dom';
 import { useRef } from 'react';
 import axiosBase from '../../../api/axiosConfig';
+import { toast } from 'react-toastify';
 
 const QuestionForm = () => {
   const [{ token }, _] = useContext(AuthContext);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
   const posted = useRef(null);
 
-  // Add these near your other useState hooks
   const [lastSaved, setLastSaved] = useState(null);
 
   useEffect(() => {
@@ -40,22 +39,7 @@ const QuestionForm = () => {
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, [title, description]); 
-  
-  useEffect(() => {
-    if (title.length > 3) {
-      const timer = setTimeout(() => {
-        axiosBase
-          .get(`/questions/suggestions?q=${encodeURIComponent(title)}`)
-          .then((res) => setSuggestions(res.data))
-          .catch(() => setSuggestions([]));
-      }, 500);
-
-      return () => clearTimeout(timer);
-    } else {
-      setSuggestions([]);
-    }
-  }, [title]);
+  }, [title, description]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -78,9 +62,9 @@ const QuestionForm = () => {
       setTimeout(() => {
         navigate('/');
         posted.current.style.display = 'none';
-      }, 2000);
+      }, 1500);
     } catch (error) {
-      alert('Failed to post question.');
+      toast.error(error.response.data.msg);
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -103,7 +87,6 @@ const QuestionForm = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Be specific and imagine you're asking a question to another person"
-          required
           className={styles.input}
         />
         <p className={styles.helpText}>
@@ -122,29 +105,11 @@ const QuestionForm = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Include all the information someone would need to answer your question"
-            required
             className={styles.textarea}
             maxLength={500}
           />
           <span className={styles.charCounter}>{description.length}/500</span>
         </div>
-
-        {suggestions.length > 0 && (
-          <div className={styles.suggestions}>
-            <h4>Similar questions:</h4>
-            <div className={styles.suggestionList}>
-              {suggestions.slice(0, 3).map((q) => (
-                <Link
-                  key={q.id}
-                  to={`/question/${q.id}`}
-                  className={styles.suggestionItem}
-                >
-                  {q.title}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
 
         <p className={styles.helpText}>
           Be detailed and include any error messages you're seeing

@@ -430,3 +430,14 @@ transition: var(--transition);
 .f_name, .l_name, .userName_input {
   width: 100%;
 }
+
+.resetPassInput {
+  position: relative;
+  margin-top: 10px;
+}
+
+.resetPassShow {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+}

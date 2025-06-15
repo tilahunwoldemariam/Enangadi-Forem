@@ -2,13 +2,11 @@ import React, { useState } from "react";
 import styles from "./Header.module.css";
 import logo from "../../asset/images/header_logo.png";
 import { IoCloseSharp } from "react-icons/io5";
-import { RxHamburgerMenu } from "react-icons/rx";
+import { FaBarsStaggered } from 'react-icons/fa6';
 import { useContext } from "react";
 import { AuthContext } from "../../Context/Context";
 import { Type } from "../../Utility/actionType";
 import { Link, useNavigate } from "react-router-dom";
-
-
 
 const Header = () => {
  const [{user}, dispatch] = useContext(AuthContext)
@@ -19,7 +17,9 @@ const Header = () => {
 
   const navigate = useNavigate()
 
-  const onSignOut=()=>{
+  const onSignOut = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     dispatch({
       type:Type.REMOVE_USER
     })
@@ -28,29 +28,28 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
-      <Link to='/' className={styles.logo}>
+      <Link to="/" className={styles.logo}>
         <img src={logo} alt="evangadi_logo" />
       </Link>
 
       <button className={styles.menuToggle} onClick={toggleMenu}>
-        <RxHamburgerMenu color="#FF8500" />
+        <FaBarsStaggered color="#FF8500" />
       </button>
 
       <nav
-        className={`${styles.mobileMenu} ${
-          isMenuOpen ? styles.showMenu : ""
-        }`}
+        className={`${styles.mobileMenu} ${isMenuOpen ? styles.showMenu : ''}`}
       >
         <button className={styles.closeButton} onClick={closeMenu}>
           <IoCloseSharp size={30} />
         </button>
-        <Link to='/' className={styles.mobile_logo}>
+        <Link to={user ? '/' : ''} className={styles.mobile_logo}>
           <img src={logo} alt="" />
         </Link>
-        <Link to="/" onClick={closeMenu}>
+
+        <Link to={user ? '/' : ''} onClick={closeMenu}>
           Home
         </Link>
-        <Link to="#" onClick={closeMenu}>
+        <Link to="/howitworks" onClick={closeMenu}>
           How it works
         </Link>
 
@@ -65,15 +64,14 @@ const Header = () => {
             Log out
           </Link>
         ) : (
-          
-          <Link to="/signin" onClick={closeMenu} className={styles.btn}>
+          <Link to="/login" onClick={closeMenu} className={styles.btn}>
             sign In
           </Link>
         )}
       </nav>
 
       <div className={styles.nav_links}>
-        <Link to="/">Home</Link>
+        <Link to={user ? '/' : ''}>Home</Link>
         <Link to="/how-it-works">How it works</Link>
         <div className={styles.auth_button}>
           {user ? (
@@ -81,7 +79,7 @@ const Header = () => {
               LOG OUT
             </button>
           ) : (
-            <button to ="/signin"  className={styles.btn}>
+            <button to="/login" className={styles.btn}>
               SIGN IN
             </button>
           )}

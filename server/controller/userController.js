@@ -1,3 +1,4 @@
+require('dotenv').config();
 const dbConnection = require('../db/dbConfig');
 const { StatusCodes } = require('http-status-codes');
 const bcrypt = require('bcrypt');
@@ -58,7 +59,7 @@ async function loginUser(req, res) {
   }
   try {
     const [user] = await dbConnection.query(
-      "SELECT userid, username, password, firstname FROM users WHERE email = ?",
+      'SELECT userid, username, password, firstname FROM users WHERE email = ?',
       [email]
     );
     if (user.length === 0) {
@@ -77,8 +78,8 @@ async function loginUser(req, res) {
     const username = user[0].username;
     const userid = user[0].userid;
     const firstname = user[0].firstname;
-    const token = jwt.sign({ username, userid }, 'secret', {
-      expiresIn: '1h',
+    const token = jwt.sign({ username, userid }, process.env.JWT_SECRET, {
+      expiresIn: '1d',
     });
     res.status(200).json({
       msg: 'User login successful',
@@ -86,11 +87,11 @@ async function loginUser(req, res) {
       user: {
         username,
         firstname,
-        userid
-      }
+        userid,
+      },
     });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ msg: 'Server error' });
     console.error(err.message);
   }
 }
@@ -135,10 +136,10 @@ async function resetPassword(req, res) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    await dbConnection.query(
-      'UPDATE users SET password = ? WHERE email = ?',
-      [hashedPassword, email]
-    );
+    await dbConnection.query('UPDATE users SET password = ? WHERE email = ?', [
+      hashedPassword,
+      email,
+    ]);
 
     return res.status(StatusCodes.OK).json({
       msg: 'Password updated successfully',
@@ -150,6 +151,5 @@ async function resetPassword(req, res) {
     });
   }
 }
-
 
 module.exports = { register, loginUser, checkUser, resetPassword };

@@ -14,7 +14,8 @@ function reducer(state, action) {
     case Type.REMOVE_USER:
       return {
         ...state,
-        user: null
+        user: null,
+        token: null
       }
     default:
       return state;
