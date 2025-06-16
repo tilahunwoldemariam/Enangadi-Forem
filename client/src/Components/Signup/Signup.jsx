@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa6';
 import { toast } from 'react-toastify';
+import { ClipLoader } from 'react-spinners';
 
 function Signup({
   regInDisplay,
@@ -15,6 +16,7 @@ function Signup({
 }) {
   // State to manage password visibility
   const [showPassword, setShowPassword] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Ref for email input field in registration form
   const emailDom2 = useRef(null);
@@ -76,6 +78,7 @@ function Signup({
     }
 
     try {
+      setIsLoading(true);
       await axiosInstance.post('/users/register', {
         username,
         firstname,
@@ -85,10 +88,12 @@ function Signup({
       });
 
       toast.success('Registration successful! You can now log in.');
+      setIsLoading(false);
       loginPage(); // Redirect to login page after successful registration
     } catch (error) {
       console.error('Error during sign up:', error.response.data.msg);
       toast.error(error.response.data.msg);
+      setIsLoading(false);
       setErrors(
         error.response.data.msg || 'An error occurred. Please try again.'
       );
@@ -195,7 +200,7 @@ function Signup({
           className={`${styles.butn_login} butn_login`}
           type="submit"
         >
-          Agree and Join
+          {isLoading ? <ClipLoader color='#fff' /> : 'Agree and Join'}
         </button>
 
         <Link to="" className={styles.already} onClick={() => loginPage()}>

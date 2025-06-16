@@ -1,22 +1,23 @@
 import React from 'react';
-import four04 from '../assets/SVG-Animation-404-Page.png';
-import Layout from './Layout/Layout';
-import './four04.css';
+import styles from './Four04.module.css';
+import { Link } from 'react-router-dom';
+import Shared from '../../Components/Shared/Shared';
+
 export default function Four04() {
   return (
-    <Layout>
-      <section className="internal-page-wrapper">
-        <div className="container">
-          <div className="row h-100  align-items-center  text-center  ">
-            <div className=" col-12  mt-5  pt-5 ">
-              <h1 className=" bold product-title  ">
-                The page you're looking for can't be found.
-              </h1>
-              <img src={four04} alt="" />
-            </div>
-          </div>
+    <Shared>
+      <section className={styles.main_wrapper}>
+        <div className={styles.content_wrapper}>
+          <h1 className={styles.title}>
+            Sorry, the page you are looking for couldn't be found.
+          </h1>
+          <p>
+            Please go back to the <Link to="/">home page</Link> and try again.
+            If it still doesn't work for you, please reach out to our team at
+            support@evangadiforum.com.
+          </p>
         </div>
       </section>
-    </Layout>
+    </Shared>
   );
 }

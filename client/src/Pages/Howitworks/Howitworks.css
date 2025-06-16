@@ -3,6 +3,7 @@
   padding: 2rem;
   background-color: #f9f9f9;
   color: #333;
+  min-height: 80vh;
 }
 
 .heroSection {
@@ -13,7 +14,11 @@
 .heroTitle {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #4f6cff;
+  color: #f4942e;
+
+  @media (max-width: 768px) {
+    font-size: 1.8rem;
+  }
 }
 
 .heroSubtitle {
@@ -37,7 +42,7 @@
 
 .stepIcon {
   font-size: 2rem;
-  color: #4f6cff;
+  color: #fe8402;
   margin-bottom: 1rem;
 }
 
@@ -60,5 +65,5 @@
 .footerText {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #4f6cff;
+  color: #fe8402;
 }

@@ -6,6 +6,8 @@ import { AuthContext } from "../../Context/Context";
 import { format, formatDistanceToNow } from "date-fns";
 import { FaArrowLeft, FaPaperPlane } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
+import Loader from '../../Components/Loader/Loader';
+import Shared from "../../Components/Shared/Shared";
 
 const AnswerPage = () => {
   const { questionid } = useParams();
@@ -89,109 +91,109 @@ const AnswerPage = () => {
 
   if (isLoading) {
     return (
-      <div className={styles.loadingContainer}>
-        <ClipLoader color="#516cf0" size={50} />
-      </div>
+      <Loader />
     );
   }
 
   return (
-    <div className={styles.main_wrapper}>
-      <div className={styles.container}>
-        <button onClick={() => navigate(-1)} className={styles.backButton}>
-          <FaArrowLeft /> Back to Questions
-        </button>
+    <Shared>
+      <div className={styles.main_wrapper}>
+        <div className={styles.container}>
+          <button onClick={() => navigate(-1)} className={styles.backButton}>
+            <FaArrowLeft /> Back to Questions
+          </button>
 
-        {/* Question Section */}
-        <div className={styles.questionSection}>
-          <div className={styles.questionCard}>
-            <div className={styles.questionTag}>
-              <span className={styles.tagIcon}>
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                  <circle cx="14" cy="14" r="14" fill="#4F6CFF" />
-                  <path
-                    d="M12 9l5 5-5 5"
-                    stroke="#fff"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-              <span className={styles.tagTitle}>{question?.title}</span>
-            </div>
-            <div className={styles.questionContent}>{question?.content}</div>
-            <div className={styles.questionMeta}>
-              {question?.created_at && (
-                <span className={styles.time}>
-                  {formatQuestionDate(question.created_at)}
+          {/* Question Section */}
+          <div className={styles.questionSection}>
+            <div className={styles.questionCard}>
+              <div className={styles.questionTag}>
+                <span className={styles.tagIcon}>
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                    <circle cx="14" cy="14" r="14" fill="#4F6CFF" />
+                    <path
+                      d="M12 9l5 5-5 5"
+                      stroke="#fff"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </span>
-              )}
+                <span className={styles.tagTitle}>{question?.title}</span>
+              </div>
+              <div className={styles.questionContent}>{question?.content}</div>
+              <div className={styles.questionMeta}>
+                {question?.created_at && (
+                  <span className={styles.time}>
+                    {formatQuestionDate(question.created_at)}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Answers Section */}
-        <div className={styles.answersSection}>
-          <h2 className={styles.sectionTitle}>Answers ({answers.length})</h2>
+          {/* Answers Section */}
+          <div className={styles.answersSection}>
+            <h2 className={styles.sectionTitle}>Answers ({answers.length})</h2>
 
-          {answers.length === 0 ? (
-            <div className={styles.noAnswers}>
-              No answers yet. Be the first to share your knowledge!
-            </div>
-          ) : (
-            answers.map((answer, i) => (
-              <div className={styles.answerCard} key={i}>
-                <div className={styles.answerContent}>{answer.content}</div>
-                <div className={styles.answerFooter}>
-                  <div className={styles.userInfo}>
-                    <div className={styles.avatar}>
-                      {answer.username?.charAt(0).toUpperCase()}
-                    </div>
-                    <span className={styles.username}>{answer.username}</span>
-                  </div>
-                  {answer.created_at && (
-                    <span className={styles.time}>
-                      {formatQuestionDate(answer.created_at)}
-                    </span>
-                  )}
-                </div>
+            {answers.length === 0 ? (
+              <div className={styles.noAnswers}>
+                No answers yet. Be the first to share your knowledge!
               </div>
-            ))
-          )}
-        </div>
+            ) : (
+              answers.map((answer, i) => (
+                <div className={styles.answerCard} key={i}>
+                  <div className={styles.answerContent}>{answer.content}</div>
+                  <div className={styles.answerFooter}>
+                    <div className={styles.userInfo}>
+                      <div className={styles.avatar}>
+                        {answer.username?.charAt(0).toUpperCase()}
+                      </div>
+                      <span className={styles.username}>{answer.username}</span>
+                    </div>
+                    {answer.created_at && (
+                      <span className={styles.time}>
+                        {formatQuestionDate(answer.created_at)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
 
-        {/* Answer Form */}
-        <div className={styles.answerFormSection}>
-          <h2 className={styles.formTitle}>Your Answer</h2>
-          <form onSubmit={handlePostAnswer}>
-            <textarea
-              className={styles.answerInput}
-              ref={answerDom}
-              placeholder="Write your answer here..."
-              required
-              rows={8}
-            />
-            <div ref={postedNotification} className={styles.successMessage}>
-              ✓ Your answer was posted successfully!
-            </div>
-            <button
-              type="submit"
-              className={styles.postAnswerBtn}
-              disabled={isPosting}
-            >
-              {isPosting ? (
-                <ClipLoader color="#fff" size={18} />
-              ) : (
-                <>
-                  <FaPaperPlane /> Post Answer
-                </>
-              )}
-            </button>
-          </form>
+          {/* Answer Form */}
+          <div className={styles.answerFormSection}>
+            <h2 className={styles.formTitle}>Your Answer</h2>
+            <form onSubmit={handlePostAnswer}>
+              <textarea
+                className={styles.answerInput}
+                ref={answerDom}
+                placeholder="Write your answer here..."
+                required
+                rows={8}
+              />
+              <div ref={postedNotification} className={styles.successMessage}>
+                ✓ Your answer was posted successfully!
+              </div>
+              <button
+                type="submit"
+                className={styles.postAnswerBtn}
+                disabled={isPosting}
+              >
+                {isPosting ? (
+                  <ClipLoader color="#fff" size={18} />
+                ) : (
+                  <>
+                    <FaPaperPlane /> Post Answer
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </Shared>
   );
 };
 

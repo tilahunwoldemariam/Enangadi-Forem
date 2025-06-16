@@ -4,6 +4,7 @@ import axiosInstance from '../../Api/axiosConfig';
 import { Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa6';
 import { toast } from 'react-toastify';
+import { ClipLoader } from 'react-spinners';
 
 function Reset({
   setErrors,
@@ -16,7 +17,8 @@ function Reset({
   registerPage
 }) {
   // State to manage password visibility
-    const [showPassword, setShowPassword] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Ref for email input field in reset form
   const emailDom3 = useRef(null);
@@ -51,11 +53,13 @@ function Reset({
     }
 
     try {
+      setIsLoading(true);
       await axiosInstance.post('/users/reset-password', {
         email,
         newPassword: password,
       });
       toast.success('Password reset successfully. You can now log in.');
+      setIsLoading(false);
       setResetPage(styles.display); // hide reset page
       setLogInDisplay(''); // show login page
     } catch (error) {
@@ -63,6 +67,7 @@ function Reset({
       setErrors(
         error?.response?.data?.msg || 'Error resetting password. Try again.'
       );
+      setIsLoading(false);
     }
   }
 
@@ -112,7 +117,7 @@ function Reset({
         </div>
 
         <button className={`${styles.butn_login} butn_login`} type="submit">
-          Reset your password
+          {isLoading ? <ClipLoader color='#fff'  /> : 'Reset your password'}
         </button>
       </form>
 
