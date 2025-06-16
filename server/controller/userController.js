@@ -8,14 +8,37 @@ async function register(req, res) {
   // Logic for user registration
   const { username, firstname, lastname, email, password } = req.body;
   try {
+
     const [user] = await dbConnection.query(
-      'select username, userId from users where username=? or email=?',
+      'select username, userId from users where username=? && email=?',
       [username, email]
     );
     if (user.length > 0) {
       return res.status(StatusCodes.CONFLICT).json({
         error: 'Conflict',
         msg: 'User already existed',
+      });
+    }
+
+    const [userEmail] = await dbConnection.query(
+      'select email, userId from users where email=?',
+      [email]
+    );
+    if (userEmail.length > 0) {
+      return res.status(StatusCodes.CONFLICT).json({
+        error: 'Conflict',
+        msg: 'User E-Mail already existed',
+      });
+    }
+
+        const [userName] = await dbConnection.query(
+      'select username, userId from users where username=?',
+      [username]
+    );
+    if (userName.length > 0) {
+      return res.status(StatusCodes.CONFLICT).json({
+        error: 'Conflict',
+        msg: 'User Name already existed',
       });
     }
 
