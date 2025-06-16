@@ -5,8 +5,10 @@ const AuthContext = createContext();
 
 // Provider component
 function AuthProvider({ children, reducer, initialState }) {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   return (
-    <AuthContext.Provider value={useReducer(reducer, initialState)}>
+    <AuthContext.Provider value={[state, dispatch]}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const dbConnection = require('../db/dbConfig');
 const { StatusCodes } = require('http-status-codes');
 const bcrypt = require('bcrypt');
@@ -7,8 +8,9 @@ async function register(req, res) {
   // Logic for user registration
   const { username, firstname, lastname, email, password } = req.body;
   try {
+
     const [user] = await dbConnection.query(
-      'select username, userId from users where username=? or email=?',
+      'select username, userId from users where username=? && email=?',
       [username, email]
     );
     if (user.length > 0) {
@@ -18,12 +20,34 @@ async function register(req, res) {
       });
     }
 
+    const [userEmail] = await dbConnection.query(
+      'select email, userId from users where email=?',
+      [email]
+    );
+    if (userEmail.length > 0) {
+      return res.status(StatusCodes.CONFLICT).json({
+        error: 'Conflict',
+        msg: 'User E-Mail already existed',
+      });
+    }
+
+        const [userName] = await dbConnection.query(
+      'select username, userId from users where username=?',
+      [username]
+    );
+    if (userName.length > 0) {
+      return res.status(StatusCodes.CONFLICT).json({
+        error: 'Conflict',
+        msg: 'User Name already existed',
+      });
+    }
+
     if (!username || !email || !firstname || !lastname || !password) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         error: 'Bad Request',
         msg: 'Please, provide full information',
       });
-    }
+    }h
     if (password.length < 8) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         msg: 'password length should be at least 8 character',
@@ -36,7 +60,7 @@ async function register(req, res) {
       `INSERT INTO users (username, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)`,
       [username, firstname, lastname, email, hashedPswrd]
     );
-    // Continue with saving to DB here...
+    
     return res
       .status(StatusCodes.CREATED)
       .json({ msg: 'User registered successfully' });
@@ -51,46 +75,50 @@ async function register(req, res) {
 async function loginUser(req, res) {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json({
+    return res.status(StatusCodes.BAD_REQUEST).json({
       error: 'Bad Request',
       msg: 'Please provide all required fields!',
     });
   }
   try {
     const [user] = await dbConnection.query(
-      "SELECT userid, username, password, firstname FROM users WHERE email = ?",
+      'SELECT userid, username, password, firstname FROM users WHERE email = ?',
       [email]
     );
+
     if (user.length === 0) {
-      return res.status(401).json({
+      return res.status(StatusCodes.UNAUTHORIZED).json({
         error: 'Unauthorized',
         msg: 'Invalid credential',
       });
     }
+
     const isMatch = await bcrypt.compare(password, user[0].password);
     if (!isMatch) {
-      return res.status(401).json({
+      return res.status(StatusCodes.UNAUTHORIZED).json({
         error: 'Unauthorized',
         msg: 'Invalid password',
       });
     }
+
     const username = user[0].username;
     const userid = user[0].userid;
     const firstname = user[0].firstname;
-    const token = jwt.sign({ username, userid }, 'secret', {
-      expiresIn: '1h',
+    const token = jwt.sign({ username, userid }, process.env.JWT_SECRET, {
+      expiresIn: '1d',
     });
-    res.status(200).json({
+
+    res.status(StatusCodes.OK).json({
       msg: 'User login successful',
       token,
       user: {
         username,
         firstname,
-        userid
-      }
+        userid,
+      },
     });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: 'Server error' });
     console.error(err.message);
   }
 }
@@ -114,7 +142,7 @@ async function resetPassword(req, res) {
     });
   }
 
-  if (newPassword.length <= 8) {
+  if (newPassword.length < 8) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       msg: 'Password should be at least 8 characters',
     });
@@ -135,10 +163,10 @@ async function resetPassword(req, res) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    await dbConnection.query(
-      'UPDATE users SET password = ? WHERE email = ?',
-      [hashedPassword, email]
-    );
+    await dbConnection.query('UPDATE users SET password = ? WHERE email = ?', [
+      hashedPassword,
+      email,
+    ]);
 
     return res.status(StatusCodes.OK).json({
       msg: 'Password updated successfully',
@@ -150,6 +178,5 @@ async function resetPassword(req, res) {
     });
   }
 }
-
 
 module.exports = { register, loginUser, checkUser, resetPassword };

@@ -16,10 +16,6 @@ app.use(cors());
 //json middleware to extract json data
 app.use(express.json());
 
-//user middle ware{
-const userRoute = require('./routes/userRoute');
-app.use('/api/users', userRoute);
-
 // Test the backend listening
 app.get('/', (req, res) => {
   res.send('Welcome to the Evangadi Forum API');
@@ -45,7 +41,7 @@ async function start() {
   try {
     const res = await dbConnection.execute("SELECT 'test'");
     app.listen(port, () => {
-      console.log(`✅ Server is running on port http://localhost:${port}`);
+      console.log(`✅ Server is running on port https://forumbackend.salimtech.com`);
     });
     console.log('✅ Successfully connected to MySQL Database');
   } catch (error) {
@@ -54,11 +50,3 @@ async function start() {
 }
 
 start();
-
-// app.listen(port, (err) => {
-//   if (err) {
-//     console.error(`❌ Failed to start the server on port ${port}`);
-//   }
-
-//   console.log(`✅ Server is running on port http://localhost:${port}`);
-// });

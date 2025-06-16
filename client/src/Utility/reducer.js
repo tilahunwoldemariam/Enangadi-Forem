@@ -1,21 +1,26 @@
-import { Type } from "./actionType";
+import { Type } from './actionType';
 
-const initial = { user: JSON.parse(localStorage.getItem('user')) || null, token: localStorage.getItem('token') || null };
+const initial = {
+  user: JSON.parse(localStorage.getItem('user')) || null,
+  token: localStorage.getItem('token') || null,
+};
 
 function reducer(state, action) {
   switch (action.type) {
     case Type.ADD_USER:
       return {
         ...state,
-        user: JSON.parse(localStorage.getItem('user')) || action.payload.user, // Save the username
-        token: localStorage.getItem('token') || action.payload.token, // Save the token
+        user: action.payload.user,
+        token: action.payload.token,
       };
-
+    
     case Type.REMOVE_USER:
       return {
         ...state,
-        user: null
-      }
+        user: null,
+        token: null,
+      };
+    
     default:
       return state;
   }

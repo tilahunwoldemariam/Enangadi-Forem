@@ -8,6 +8,7 @@ import { useQuestions } from '../../Context/QuestionContext';
 import { FaQuestion } from 'react-icons/fa6';
 import { IoMdArrowRoundUp } from 'react-icons/io';
 import { ClipLoader } from 'react-spinners';
+import Shared from '../../Components/Shared/Shared';
 
 const Home = () => {
   const [
@@ -21,6 +22,7 @@ const Home = () => {
 
   const { questions, allQuestions, setQuestions, searchQuery, setSearchQuery } =
     useQuestions();
+  const [error, setError] = useState('');
   
   const navigate = useNavigate();
   const searchDom = useRef(null);
@@ -39,6 +41,7 @@ const Home = () => {
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching questions:', error);
+        setError(error.response.data.msg)
         setIsLoading(false);
       }
     };
@@ -54,112 +57,134 @@ const Home = () => {
   };
 
   return (
-    <main className={styles.container}>
-      {/* Welcome Section */}
-      <section className={styles.welcomeSection}>
-        <div className={styles.welcomeContent}>
-          <h1>
-            Welcome back,{' '}
-            <span className={styles.userName}>{userFirstName}</span>!
-          </h1>
-          <p className={styles.subtitle}>
-            Ready to dive into today's coding challenges? Ask questions, share
-            knowledge, and learn together!
-          </p>
-          <Link to="/ask" className={styles.askButton}>
-            <span className={styles.plusIcon}>+</span> Ask a Question
-          </Link>
-        </div>
-        <div className={styles.knowledgeBubbles}>
-          {Array.from({ length: 10 }).map((_, index) => (
-            <div key={index} className={styles.bubble}>
-              <FaQuestion size={40} className={styles.questionIcon} />
-            </div>
-          ))}
-        </div>
-      </section>
+    <Shared>
+      <main className={styles.container}>
+        {/* Welcome Section */}
+        <section className={styles.welcomeSection}>
+          <div className={styles.welcomeContent}>
+            <h1>
+              Welcome back,{' '}
+              <span className={styles.userName}>{userFirstName}</span>!
+            </h1>
+            <p className={styles.subtitle}>
+              Ready to dive into today's coding challenges? Ask questions, share
+              knowledge, and learn together!
+            </p>
+            <Link to="/ask" className={styles.askButton}>
+              <span className={styles.plusIcon}>+</span> Ask a Question
+            </Link>
+          </div>
+          <div className={styles.knowledgeBubbles}>
+            {Array.from({ length: 10 }).map((_, index) => (
+              <div key={index} className={styles.bubble}>
+                <FaQuestion size={40} className={styles.questionIcon} />
+              </div>
+            ))}
+          </div>
+        </section>
 
-      {/* Search Bar */}
-      <section className={styles.searchSection}>
-        <div className={styles.searchContainer}>
-          <input
-            type="text"
-            ref={searchDom}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search questions by title..."
-            className={styles.searchInput}
-          />
+        {/* Search Bar */}
+        <section className={styles.searchSection}>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              ref={searchDom}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search questions by title..."
+              className={styles.searchInput}
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className={styles.clearButton}
+              >
+                ×
+              </button>
+            )}
+          </div>
           {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className={styles.clearButton}
-            >
-              ×
-            </button>
+            <p className={styles.searchResults}>
+              Found {questions.length} of {allQuestions.length} questions
+            </p>
           )}
-        </div>
-        {searchQuery && (
-          <p className={styles.searchResults}>
-            Found {questions.length} of {allQuestions.length} questions
-          </p>
-        )}
-      </section>
+        </section>
 
-      <div className={styles.floatingActions}>
-        <button className={styles.mainAction} onClick={() => navigate('/ask')}>
-          <span>+</span>
-        </button>
-
-        <div className={styles.secondaryActions}>
-          <button onClick={() => searchDom.current.focus()}>🔍</button>
-          <button onClick={() => window.scrollTo(0, 0)}>
-            <IoMdArrowRoundUp size={30} />
+        <div className={styles.floatingActions}>
+          <button
+            className={styles.mainAction}
+            onClick={() => navigate('/ask')}
+          >
+            <span>+</span>
           </button>
+
+          <div className={styles.secondaryActions}>
+            <button
+              onClick={() => {
+                searchDom.current.focus();
+                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+              }}
+            >
+              🔍
+            </button>
+            <button
+              onClick={() =>
+                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+              }
+            >
+              <IoMdArrowRoundUp size={30} />
+            </button>
+          </div>
         </div>
-      </div>
 
-      <section className={styles.questionsSection}>
-        <div className={styles.sectionHeader}>
-          <h2>Latest Questions</h2>
-          <p className={styles.helpText}>
-            Help your fellow bootcamp students by answering their questions!
-          </p>
-        </div>
+        <section className={styles.questionsSection}>
+          <div className={styles.sectionHeader}>
+            <h2>Latest Questions</h2>
+            <p className={styles.helpText}>
+              Help your fellow bootcamp students by answering their questions!
+            </p>
+          </div>
 
-        <div className={styles.questionsList}>
-          {isLoading ? (
-            <ClipLoader />
-          ) : (
-            questions?.map((question) => {
-              return (
-                <Link
-                  to={`/questionDetail/${question.question_id}`}
-                  key={question.id}
-                  className={styles.questionCard}
-                >
-                  <div className={styles.userColumn}>
-                    <div className={styles.avatar}>
-                      {question.firstname.charAt(0).toUpperCase()}
-                    </div>
-                    <span className={styles.username}>{question.username}</span>
-                  </div>
-
-                  <div className={styles.contentColumn}>
-                    <h3 className={styles.questionTitle}>{question.title}</h3>
-                    <div className={styles.questionMeta}>
-                      <span className={styles.time}>
-                        {formatQuestionDate(question.created_at)}
+          <div className={styles.questionsList}>
+            {isLoading ? (
+              <div className={styles.loader_wrapper}>
+                <ClipLoader />
+              </div>
+            ) : error === 'No questions found' ? (
+              <p>{error}</p>
+            ) : (
+              questions?.map((question) => {
+                return (
+                  <Link
+                    to={`/questionDetail/${question.question_id}`}
+                    key={question.question_id}
+                    className={styles.questionCard}
+                  >
+                    <div className={styles.userColumn}>
+                      <div className={styles.avatar}>
+                        {question.firstname.charAt(0).toUpperCase()}
+                      </div>
+                      <span className={styles.username}>
+                        {question.username}
                       </span>
                     </div>
-                  </div>
-                </Link>
-              );
-            })
-          )}
-        </div>
-      </section>
-    </main>
+
+                    <div className={styles.contentColumn}>
+                      <h3 className={styles.questionTitle}>{question.title}</h3>
+                      <div className={styles.questionMeta}>
+                        <span className={styles.time}>
+                          {formatQuestionDate(question.created_at)}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })
+            )}
+          </div>
+        </section>
+      </main>
+    </Shared>
   );
 };
 

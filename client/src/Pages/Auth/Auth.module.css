@@ -8,8 +8,6 @@
 }
 
 .loginLayout {
-/* display: grid;
-grid-template-columns: repeat(2, 1fr); */
 display: flex;
 gap: 3rem;
 max-width: 1200px;
@@ -19,7 +17,6 @@ margin: 0 auto;
 /* left side start here */
 .left_side{
   background-color: var(--color-butn-txt);
-  /* height: 500px; */
   margin-top: 6rem;
   margin-left: 10rem;
   border-radius: 10px;
@@ -429,4 +426,15 @@ transition: var(--transition);
 
 .f_name, .l_name, .userName_input {
   width: 100%;
+}
+
+.resetPassInput {
+  position: relative;
+  margin-top: 10px;
+}
+
+.resetPassShow {
+  position: absolute;
+  top: 15px;
+  right: 35px;
 }
