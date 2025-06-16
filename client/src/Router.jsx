@@ -1,62 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
-import axiosInstance from './Api/axiosConfig';
+import React, { useContext, useEffect, useState } from 'react';
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import { AuthContext } from './Context/Context';
 import Home from './pages/Home/Home';
-import QuestionPage from './pages/Questionpage/Questionpage'
-import Shared from './Components/Shared/Shared';
+import QuestionPage from './pages/Questionpage/Questionpage';
 import AnswerPage from './pages/Answer/AnswerPage';
 import Howitworks from './pages/Howitworks/Howitworks';
 import Auth from './pages/Auth/Auth';
-import { toast } from 'react-toastify';
+import Four04 from './Pages/Four04/Four04';
+import Loader from './Components/Loader/Loader';
 
 function Router() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const user = JSON.parse(localStorage.getItem('user'));
+  const [{ user }] = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
-    // Check if user is logged in
-    async function checkUser() {
-      try {
-        await axiosInstance.get('/users/check', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('User not authenticated:', error.response);
-        toast.error('User not authenticated:', error.response.data.msg);
-        setIsAuthenticated(false);
-      }
-    }
+    // Handle initial load
+    const initialLoadTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
 
-    checkUser();
+    return () => clearTimeout(initialLoadTimer);
   }, []);
 
-  // Show a loading state while checking
-  if (isAuthenticated === null) {
-    return <div>Loading...</div>;
+  useEffect(() => {
+    // Handle route change
+    setIsLoading(true);
+    const routeChangeTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+
+    return () => clearTimeout(routeChangeTimer);
+  }, [location.pathname]);
+
+  if (isLoading) {
+    return <Loader />;
   }
+
   return (
-    <Shared>
-      <Routes>
-        <Route
-          path="/"
-          element={user ? <Home /> : <Navigate to="/login" replace />}
-        />
-        <Route
-          path="/ask"
-          element={user ? <QuestionPage /> : <Navigate to="/login" replace />}
-        />
-        <Route
-          path="/questionDetail/:questionid"
-          element={user ? <AnswerPage /> : <Navigate to="/login" replace />}
-        />
-        <Route path="/login" element={<Auth />} />
-        <Route path="/howItWorks" element={<Howitworks />} />
-      </Routes>
-    </Shared>
+    <Routes>
+      <Route path="/login" element={<Auth />} />
+      <Route path="/how-it-works" element={<Howitworks />} />
+      <Route
+        path="/"
+        element={user ? <Home /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/ask"
+        element={user ? <QuestionPage /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/questionDetail/:questionid"
+        element={user ? <AnswerPage /> : <Navigate to="/login" replace />}
+      />
+      <Route path="*" element={<Four04 />} />
+    </Routes>
   );
 }
 

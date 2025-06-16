@@ -1,14 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './Auth.module.css';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaEye, FaEyeSlash } from 'react-icons/fa6';
-import axiosInstance from '../../Api/axiosConfig';
 import About from '../../Components/About/About';
 import Login from '../../Components/Login/Login';
 import Signup from '../../Components/Signup/Signup';
 import Reset from '../../Components/Reset/Reset';
+import Shared from '../../Components/Shared/Shared';
 
 function Auth() {
+  // State to manage the display of login form
+  const [logInDisplay, setLogInDisplay] = useState('');
 
   // State to manage the display of registration form
   const [regInDisplay, setRegInDisplay] = useState(styles.display);
@@ -18,11 +18,6 @@ function Auth() {
 
   // State to manage errors
   const [errors, setErrors] = useState('');
-
-  // State to manage the display of login form
-  const [logInDisplay, setLogInDisplay] = useState('');
-
-
 
   // Empty fields for error display
   const [emptyFields, setEmptyFields] = useState({
@@ -62,49 +57,51 @@ function Auth() {
   }  
 
   return (
-    <section className={styles.main__bg}>
-      <div className={styles.loginLayout}>
-        {/* Left side */}
-        <div className={styles.left_side}>
-          <Login
-            setErrors={setErrors}
-            setEmptyFields={setEmptyFields}
-            logInDisplay={logInDisplay}
-            registerPage={registerPage}
-            errors={errors}
-            emptyFields={emptyFields}
-            setResetPage={setResetPage}
-            setLogInDisplay={setLogInDisplay}
-            setRegInDisplay={setRegInDisplay}
-          />
+    <Shared>
+      <section className={styles.main__bg}>
+        <div className={styles.loginLayout}>
+          {/* Left side */}
+          <div className={styles.left_side}>
+            <Login
+              setErrors={setErrors}
+              setEmptyFields={setEmptyFields}
+              logInDisplay={logInDisplay}
+              registerPage={registerPage}
+              errors={errors}
+              emptyFields={emptyFields}
+              setResetPage={setResetPage}
+              setLogInDisplay={setLogInDisplay}
+              setRegInDisplay={setRegInDisplay}
+            />
 
-          {/* register form */}
-          <Signup
-            setErrors={setErrors}
-            setEmptyFields={setEmptyFields}
-            regInDisplay={regInDisplay}
-            errors={errors}
-            loginPage={loginPage}
-            emptyFields={emptyFields}
-          />
+            {/* register form */}
+            <Signup
+              setErrors={setErrors}
+              setEmptyFields={setEmptyFields}
+              regInDisplay={regInDisplay}
+              errors={errors}
+              loginPage={loginPage}
+              emptyFields={emptyFields}
+            />
 
-          {/* reset form */}
-          <Reset
-            setErrors={setErrors}
-            setEmptyFields={setEmptyFields}
-            emptyFields={emptyFields}
-            setResetPage={setResetPage}
-            resetPage={resetPage}
-            setLogInDisplay={setLogInDisplay}
-            loginPage={loginPage}
-            registerPage={registerPage}
-          />
+            {/* reset form */}
+            <Reset
+              setErrors={setErrors}
+              setEmptyFields={setEmptyFields}
+              emptyFields={emptyFields}
+              setResetPage={setResetPage}
+              resetPage={resetPage}
+              setLogInDisplay={setLogInDisplay}
+              loginPage={loginPage}
+              registerPage={registerPage}
+            />
+          </div>
+
+          {/* Right Side */}
+          <About />
         </div>
-
-        {/* Right Side */}
-        <About />
-      </div>
-    </section>
+      </section>
+    </Shared>
   );
 }
 

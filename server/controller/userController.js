@@ -24,7 +24,7 @@ async function register(req, res) {
         error: 'Bad Request',
         msg: 'Please, provide full information',
       });
-    }
+    }h
     if (password.length < 8) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         msg: 'password length should be at least 8 character',
@@ -37,7 +37,7 @@ async function register(req, res) {
       `INSERT INTO users (username, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)`,
       [username, firstname, lastname, email, hashedPswrd]
     );
-    // Continue with saving to DB here...
+    
     return res
       .status(StatusCodes.CREATED)
       .json({ msg: 'User registered successfully' });
@@ -52,7 +52,7 @@ async function register(req, res) {
 async function loginUser(req, res) {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json({
+    return res.status(StatusCodes.BAD_REQUEST).json({
       error: 'Bad Request',
       msg: 'Please provide all required fields!',
     });
@@ -62,26 +62,30 @@ async function loginUser(req, res) {
       'SELECT userid, username, password, firstname FROM users WHERE email = ?',
       [email]
     );
+
     if (user.length === 0) {
-      return res.status(401).json({
+      return res.status(StatusCodes.UNAUTHORIZED).json({
         error: 'Unauthorized',
         msg: 'Invalid credential',
       });
     }
+
     const isMatch = await bcrypt.compare(password, user[0].password);
     if (!isMatch) {
-      return res.status(401).json({
+      return res.status(StatusCodes.UNAUTHORIZED).json({
         error: 'Unauthorized',
         msg: 'Invalid password',
       });
     }
+
     const username = user[0].username;
     const userid = user[0].userid;
     const firstname = user[0].firstname;
     const token = jwt.sign({ username, userid }, process.env.JWT_SECRET, {
       expiresIn: '1d',
     });
-    res.status(200).json({
+
+    res.status(StatusCodes.OK).json({
       msg: 'User login successful',
       token,
       user: {
@@ -91,7 +95,7 @@ async function loginUser(req, res) {
       },
     });
   } catch (err) {
-    res.status(500).json({ msg: 'Server error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: 'Server error' });
     console.error(err.message);
   }
 }
@@ -115,7 +119,7 @@ async function resetPassword(req, res) {
     });
   }
 
-  if (newPassword.length <= 8) {
+  if (newPassword.length < 8) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       msg: 'Password should be at least 8 characters',
     });

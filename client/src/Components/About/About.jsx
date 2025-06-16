@@ -23,7 +23,7 @@ function About() {
         </p>
 
         <button className={`${styles.h_w_butn} h_w_butn`}>
-          <Link to="/howItWorks">HOW IT WORKS</Link>
+          <Link to="/how-it-works">HOW IT WORKS</Link>
         </button>
       </div>
     </div>

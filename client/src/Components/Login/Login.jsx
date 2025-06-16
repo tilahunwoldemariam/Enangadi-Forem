@@ -6,6 +6,7 @@ import axiosInstance from '../../Api/axiosConfig';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa6';
 import { toast } from 'react-toastify';
+import { ClipLoader } from 'react-spinners';
 
 function Login({
   setErrors,
@@ -21,6 +22,7 @@ function Login({
   const [_, dispatch] = useContext(AuthContext);
   // State to manage password visibility
   const [showPassword, setShowPassword] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Ref for email input field
   const emailDom1 = useRef(null);
@@ -72,6 +74,7 @@ function Login({
     }
 
     try {
+      setIsLoading(true);
       const res = await axiosInstance.post('/users/login', {
         email,
         password,
@@ -84,17 +87,19 @@ function Login({
       dispatch({
         type: Type.ADD_USER,
         payload: {
-          token: localStorage.getItem('token'),
-          user: JSON.parse(localStorage.getItem('user')),
+          token: res.data.token,
+          user: res.data.user,
         },
       });
 
       toast.success(res.data.msg);
+      setIsLoading(false);
       navigate('/'); // Redirect to home page after successful login
     } catch (error) {
       console.error('Error during Login:', error);
       toast.error(error?.response?.data?.msg);
       setErrors(error?.response?.data?.msg);
+      setIsLoading(false);
     }
   }
 
@@ -169,7 +174,7 @@ function Login({
         </p>
 
         <button type="submit" className={`butn_login ${styles.butn_login}`}>
-          Login
+          {isLoading ? <ClipLoader color="#fff" /> : 'Login'}
         </button>
       </form>
     </div>
