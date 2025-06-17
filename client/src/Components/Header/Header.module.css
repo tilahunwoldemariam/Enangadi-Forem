@@ -2,12 +2,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 80px;
+    padding: 12px 90px;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 1000;
   }
   
   .logo {
@@ -44,24 +44,30 @@
   .nav_links a {
     text-decoration: none;
     color: black;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    font-family: sans-serif;
   }
-  
+  .nav_links a:last-child{
+    color: #fff;
+   justify-content: center;
+   align-items: center;
+   font-size: 1.1rem;
+   
+  }
+  .nav_links a:last-child:hover{
+    background-color: #FE8402;
+    color: #fff;
+  }
 
-  .auth_button .btn{
+  .btn {
     border: none;
     border-radius: 6px;
     background: #516cf0;
-    text-align: center;
     width: 200px;
-    height: 41px;
     margin: -8px;
-    color: #fff;
     transition: all 400ms ease;
   }
-  .auth_button .btn:hover {
-    background-color: #FE8402;
-  }
+ 
 
   .mobileMenu {
   display: none;
@@ -81,6 +87,7 @@
 .mobile_logo{
     position: absolute;
     top: 30px;
+    
 
 }
 .mobile_logo img{
@@ -107,7 +114,7 @@
   @media (max-width: 768px) {
     .header {
       padding: 15px 20px;
-      align-items: flex-start;
+      /* align-items: flex-start; */
     }
     .logo img{
         width: 200px;
@@ -118,11 +125,6 @@
     .nav_links{
         display: none;
     }
-    .nav_links.open {
-        display: flex;
-      }
-      .auth_button {
-        margin-left: 1rem;
-      }
+    
   }
   

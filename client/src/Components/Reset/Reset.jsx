@@ -31,24 +31,35 @@ function Reset({
     const email = emailDom3.current.value.trim();
     const password = passwordDom3.current.value.trim();
 
-    const empty = {
-      email: !email,
-      password: !password,
-    };
-    setEmptyFields(empty);
+    // Check for empty fields
+    const newEmptyFields = {};
+    if (!email) newEmptyFields.email = true;
+    if (!password) newEmptyFields.password = true;
+    
+    if (Object.keys(newEmptyFields).length > 0) {
+      setEmptyFields(newEmptyFields);
+      setErrors('All fields are required.');
+      toast.error('All fields are required.');
+
+      // Clear emptyFields after 2 seconds
+      setTimeout(() => {
+        setEmptyFields({
+          email: false,
+          password: false,
+        });
+      }, 2000);
+      return;
+    }
 
     if (!email || !password) {
       setErrors('Please fill in all fields.');
       toast.error('Please fill in all fields.');
-      setTimeout(() => setEmptyFields({ email: false, password: false }), 2000);
       return;
     }
 
     if (password.length < 8) {
       toast.error('Password must be at least 8 characters.');
       setErrors('Password must be at least 8 characters.');
-      setEmptyFields({ password: true });
-      setTimeout(() => setEmptyFields({ password: false }), 2000);
       return;
     }
 
