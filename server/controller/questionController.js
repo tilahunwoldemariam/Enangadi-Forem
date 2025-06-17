@@ -33,6 +33,9 @@ async function postQuestion(req, res) {
 }
 
 async function getAllQuestions(req, res) {
+  const { page = 1, limit = 10 } = req.query; // Extract page and limit from query parameters
+  const offset = (page - 1) * limit; // Calculate offset for pagination
+
   try {
     const [results] = await dbConnection.query(`
       SELECT 
@@ -47,7 +50,13 @@ async function getAllQuestions(req, res) {
       FROM questions
       JOIN users ON questions.userid = users.userid
       ORDER BY questions.id DESC
-    `);
+      LIMIT ? OFFSET ?`,    
+      [parseInt(limit), parseInt(offset)]
+    );
+
+    const [totalCount] = await dbConnection.query(
+      `SELECT COUNT(*) AS total FROM questions`
+    );
 
     // Handle case where no questions are found
     if (!results || results.length === 0) {

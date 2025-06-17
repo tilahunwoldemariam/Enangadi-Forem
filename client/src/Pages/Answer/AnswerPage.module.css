@@ -374,3 +374,32 @@
 .questionActions {
   margin-top: 10px;
 }
+
+.likeButton,
+.dislikeButton {
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+.likeButton:hover {
+  background-color: #d4edda; /* Light green for like */
+}
+
+.dislikeButton:hover {
+  background-color: #f8d7da; /* Light red for dislike */
+}
+
+.likeButton.active,
+.dislikeButton.active {
+  background-color: #d4edda; /* Highlight for active like */
+  border: 1px solid #28a745; /* Green border for active like */
+}
+
+.dislikeButton.active {
+  background-color: #f8d7da; /* Highlight for active dislike */
+  border: 1px solid #dc3545; /* Red border for active dislike */
+}

@@ -509,3 +509,69 @@ h2 {
   border-color: #516cf0;
   box-shadow: 0 4px 12px rgba(81, 108, 240, 0.2);
 }
+
+.showLessButton {
+  background-color: #ff4d4d; /* Red color for "Show Less" button */
+  color: #fff; /* White text */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 0.5rem 1rem; /* Padding inside button */
+  font-size: 1rem; /* Font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  margin: 1rem auto; /* Center the button */
+  display: block; /* Center the button */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.showLessButton:hover {
+  background-color: #e60000; /* Darker red on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.showLessButton:active {
+  transform: scale(0.95); /* Slight shrink effect on click */
+}
+
+.previousPageButton {
+  background-color: #4f6cff; /* Primary button color */
+  color: #fff; /* White text */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 0.5rem 1rem; /* Padding inside button */
+  font-size: 1rem; /* Font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  margin: 1rem; /* Center the button */
+  display: inline-block; /* Inline-block for alignment */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.previousPageButton:hover {
+  background-color: #3b5bcc; /* Darker blue on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.previousPageButton:active {
+  transform: scale(0.95); /* Slight shrink effect on click */
+}
+
+.nextPageButton {
+  background-color: #4f6cff;
+  color: #fff;
+  border: none; 
+  border-radius: 5px; 
+  padding: 0.5rem 1rem; 
+  font-size: 1rem; 
+  cursor: pointer; /* Pointer cursor on hover */
+  margin: 1rem; /* Center the button */
+  display: inline-block; /* Inline-block for alignment */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.nextPageButton:hover {
+  background-color: #3b5bcc; /* Darker blue on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.nextPageButton:active {
+  transform: scale(0.95); /* Slight shrink effect on click */
+}

@@ -138,6 +138,47 @@ const AnswerPage = () => {
   }
 }
 
+ async function handleVoteAnswer(answerId, voteType) {
+   try {
+     const res = await axiosBase.post(
+       `/answers/vote/${answerId}`,
+       { voteType },
+       {
+         headers: { Authorization: `Bearer ${token}` },
+       }
+     );
+
+     if (res.data.msg === 'Vote removed successfully') {
+       // If the vote was removed, decrease the count
+       setAnswers((prev) =>
+         prev.map((answer) =>
+           answer.answerid === answerId
+             ? voteType === 'like'
+               ? { ...answer, likes: answer.likes - 1 }
+               : { ...answer, dislikes: answer.dislikes - 1 }
+             : answer
+         )
+       );
+     } else {
+       // If the vote was added, increase the count
+       setAnswers((prev) =>
+         prev.map((answer) =>
+           answer.answerid === answerId
+             ? voteType === 'like'
+               ? { ...answer, likes: answer.likes + 1 }
+               : { ...answer, dislikes: answer.dislikes + 1 }
+             : answer
+         )
+       );
+     }
+   } catch (error) {
+     console.error(
+       'Error voting on answer:',
+       error.response?.data?.msg || error.message
+     );
+   }
+ }
+
   const formatQuestionDate = (dateString) => {
     const postedTime = new Date(dateString);
     const timeAgo = formatDistanceToNow(postedTime, { addSuffix: true });
@@ -265,6 +306,30 @@ const AnswerPage = () => {
                       </div>
                       <span className={styles.username}>{answer.username}</span>
                     </div>
+
+                    <div className={styles.answerActions}>
+                      <button
+                        onClick={() =>
+                          handleVoteAnswer(answer.answerid, 'like')
+                        }
+                        className={`${styles.likeButton} ${
+                          answer.likes === 1 ? styles.active : ''
+                        }`}
+                      >
+                        👍 Like {answer.likes}
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleVoteAnswer(answer.answerid, 'dislike')
+                        }
+                        className={`${styles.dislikeButton} ${
+                          answer.dislikes === 1 ? styles.active : ''
+                        }`}
+                      >
+                        👎 Dislike {answer.dislikes}
+                      </button>
+                    </div>
+
                     {answer.created_at && (
                       <span className={styles.time}>
                         {formatQuestionDate(answer.created_at)}

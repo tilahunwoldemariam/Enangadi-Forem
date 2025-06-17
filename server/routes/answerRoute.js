@@ -6,6 +6,7 @@ const {
   postAnswers,
   deleteAnswer,
   getAllAnswer,
+  voteAnswer
 } = require('../controller/answersController');
 
 router.post('/postanswer', authMiddleware, postAnswers);
@@ -16,8 +17,7 @@ router.delete('/delete/:id', authMiddleware, deleteAnswer);
 
 router.get('/:question_id', authMiddleware, getAllAnswer);
 
-
-
+router.post('/vote/:id', authMiddleware, voteAnswer);
 module.exports = router;
 
 

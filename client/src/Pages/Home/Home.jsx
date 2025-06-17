@@ -21,6 +21,10 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(''); // State for selected category
 
+  const [page, setPage] = useState(1); // Track the current page
+  const [hasMore, setHasMore] = useState(false); // Track if there are more questions to load
+  const [hasLess, setHasLess] = useState(false); // Track if there are fewer questions to show
+
   const {
     suggestions,
     questions,
@@ -31,7 +35,6 @@ const Home = () => {
   } = useQuestions();
   const [error, setError] = useState('');
 
-  const navigate = useNavigate();
   const searchDom = useRef(null);
 
   const userFirstName =
@@ -42,9 +45,11 @@ const Home = () => {
       setIsLoading(true);
       try {
         const res = await axiosInstance.get('/questions/all-questions', {
+          params: { page, limit: 10 }, // Pass page and limit as query parameters
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log('API Response:', res.data);
+        setHasMore(res.data.questions.length > 0); // Check if there are more questions to load
+        setHasLess(page > 1); // Enable "Show Less" if page > 1
         setQuestions(res.data.questions);
         setIsLoading(false);
       } catch (error) {
@@ -55,7 +60,19 @@ const Home = () => {
     };
 
     fetchQuestions();
-  }, []);
+  }, [token, page]);
+
+  const lastQuestionRef = useRef(null);
+
+  const handleShowMore = () => {
+    setPage((prevPage) => prevPage + 1); // Load the next page
+  };
+
+  const handleShowLess = () => {
+    if (page > 1) {
+      setPage((prevPage) => prevPage - 1); // Load the previous page
+    }
+  };
 
   const formatQuestionDate = (dateString) => {
     const postedTime = new Date(dateString);
@@ -184,11 +201,13 @@ const Home = () => {
             ) : error === 'No questions found' ? (
               <p>{error}</p>
             ) : (
-              filteredQuestions?.map((question) => {
+              filteredQuestions?.map((question, index) => {
+                const isLastQuestion = index === questions.length - 1;
                 return (
                   <Link
                     to={`/questionDetail/${question.question_id}`}
                     key={question.question_id}
+                    ref={isLastQuestion ? lastQuestionRef : null} // Attach ref to the last question
                     className={styles.questionCard}
                   >
                     <div className={styles.userColumn}>
@@ -213,6 +232,29 @@ const Home = () => {
               })
             )}
           </div>
+
+          <div className={styles.paginationButtons}>
+            {hasLess && !isLoading && (
+              <button
+                onClick={handleShowLess}
+                className={styles.previousPageButton} // Updated class name
+              >
+                Previous Page
+              </button>
+            )}
+            {hasMore && !isLoading && (
+              <button
+                onClick={handleShowMore}
+                className={styles.nextPageButton} // Updated class name
+              >
+                Next Page
+              </button>
+            )}
+          </div>
+
+          {!hasMore && (
+            <p className={styles.noMoreQuestions}>No more questions to load.</p>
+          )}
         </section>
       </main>
     </Shared>
