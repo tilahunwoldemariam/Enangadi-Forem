@@ -22,4 +22,7 @@ router.get('/check', authMiddleware, checkUser);
 // password reset
 router.post('/reset-password', resetPassword);
 
+// user profile
+// router.get('/profile/:userid', authMiddleware, getUserProfile);
+
 module.exports = router;

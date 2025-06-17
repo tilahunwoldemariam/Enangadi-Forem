@@ -2,17 +2,26 @@ const dbConnection = require("../db/dbConfig")
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware');
+const {
+  postAnswers,
+  deleteAnswer,
+  getAllAnswer,
+  voteAnswer
+} = require('../controller/answersController');
 
-const { postAnswers } = require('../controller/answersController');
 router.post('/postanswer', authMiddleware, postAnswers);
 
-const { getAllAnswer } = require('../controller/answersController');
-router.get('/:question_Id', authMiddleware, getAllAnswer);
+router.get('/:question_id', authMiddleware, getAllAnswer);
 
+router.delete('/delete/:id', authMiddleware, deleteAnswer);
 
+router.get('/:question_id', authMiddleware, getAllAnswer);
 
-
+router.post('/vote/:id', authMiddleware, voteAnswer);
 module.exports = router;
+
+
+
  
 // answerRoute.js
 

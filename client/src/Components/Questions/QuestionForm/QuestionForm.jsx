@@ -11,6 +11,7 @@ const QuestionForm = () => {
   const [{ token }, _] = useContext(AuthContext);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [tag, setTag] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const QuestionForm = () => {
     try {
       await axiosBase.post(
         '/questions/post-questions',
-        { title, description },
+        { title, description, tag },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -113,6 +114,37 @@ const QuestionForm = () => {
 
         <p className={styles.helpText}>
           Be detailed and include any error messages you're seeing
+        </p>
+      </div>
+
+      {/* Category Picker */}
+      <div className={styles.formGroup}>
+        <label htmlFor="category" className={styles.label}>
+          Category
+        </label>
+        <select
+          id="category"
+          value={tag}
+          onChange={(e) => setTag(e.target.value)}
+          className={styles.select}
+        >
+          <option value="" disabled>
+            Select a category
+          </option>
+          <option value="Frontend">Frontend</option>
+          <option value="Backend">Backend</option>
+          <option value="HTML">HTML</option>
+          <option value="CSS">CSS</option>
+          <option value="Bootstrap">Bootstrap</option>
+          <option value="JavaScript">JavaScript</option>
+          <option value="jQuery">jQuery</option>
+          <option value="React">React</option>
+          <option value="Node.js">Node.js</option>
+          <option value="MySQL">MySQL</option>
+          <option value="Express">Express</option>
+        </select>
+        <p className={styles.helpText}>
+          Choose the category that best fits your question
         </p>
       </div>
 

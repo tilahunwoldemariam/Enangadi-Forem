@@ -47,7 +47,7 @@ async function register(req, res) {
         error: 'Bad Request',
         msg: 'Please, provide full information',
       });
-    }h
+    }
     if (password.length < 8) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         msg: 'password length should be at least 8 character',
@@ -179,4 +179,27 @@ async function resetPassword(req, res) {
   }
 }
 
-module.exports = { register, loginUser, checkUser, resetPassword };
+async function getUserProfile(req, res) {
+  const userId = req.user.userid;
+
+  try {
+    const [questions] = await dbConnection.query(
+      'SELECT * FROM questions WHERE userid = ?',
+      [userId]
+    );
+    const [answers] = await dbConnection.query(
+      'SELECT * FROM answers WHERE userid = ?',
+      [userId]
+    );
+
+    res.status(StatusCodes.OK).json({ questions, answers });
+  } catch (error) {
+    console.error(error.message);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: 'Internal Server Error',
+      msg: 'An unexpected error occurred',
+    });
+  }
+}
+
+module.exports = { register, loginUser, checkUser, resetPassword, getUserProfile };
