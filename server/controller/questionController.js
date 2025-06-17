@@ -54,9 +54,9 @@ async function getAllQuestions(req, res) {
       [parseInt(limit), parseInt(offset)]
     );
 
-    const [totalCount] = await dbConnection.query(
-      `SELECT COUNT(*) AS total FROM questions`
-    );
+    // const [totalCount] = await dbConnection.query(
+    //   `SELECT COUNT(*) AS total FROM questions`
+    // );
 
     // Handle case where no questions are found
     if (!results || results.length === 0) {
