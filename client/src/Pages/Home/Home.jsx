@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import styles from './Home.module.css';
 import { AuthContext } from '../../Context/Context';
 import axiosInstance from '../../Api/axiosConfig';
-import { format, formatDistanceToNow } from "date-fns";
+import { format, formatDistanceToNow } from 'date-fns';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuestions } from '../../Context/QuestionContext';
 import { FaQuestion } from 'react-icons/fa6';
@@ -19,11 +19,18 @@ const Home = () => {
     _,
   ] = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(''); // State for selected category
 
-  const { questions, allQuestions, setQuestions, searchQuery, setSearchQuery } =
-    useQuestions();
+  const {
+    suggestions,
+    questions,
+    allQuestions,
+    setQuestions,
+    searchQuery,
+    setSearchQuery,
+  } = useQuestions();
   const [error, setError] = useState('');
-  
+
   const navigate = useNavigate();
   const searchDom = useRef(null);
 
@@ -41,13 +48,13 @@ const Home = () => {
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching questions:', error);
-        setError(error.response.data.msg)
+        setError(error.response.data.msg);
         setIsLoading(false);
       }
     };
 
     fetchQuestions();
-  }, [token, setQuestions]);
+  }, []);
 
   const formatQuestionDate = (dateString) => {
     const postedTime = new Date(dateString);
@@ -55,6 +62,14 @@ const Home = () => {
     const formattedDate = format(postedTime, 'MMM d');
     return `${timeAgo} • ${formattedDate}`;
   };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchQuery(suggestion.title); // Update the search query with the clicked suggestion
+  };
+
+  const filteredQuestions = selectedCategory
+    ? questions.filter((question) => question.tag === selectedCategory)
+    : questions;
 
   return (
     <Shared>
@@ -102,40 +117,55 @@ const Home = () => {
                 ×
               </button>
             )}
+
+            {/* Suggestions Dropdown */}
+            {searchQuery && suggestions.length > 0 && (
+              <ul className={styles.suggestionsList}>
+                {suggestions.map((suggestion, index) => (
+                  <li
+                    key={index}
+                    className={styles.suggestionItem}
+                    onClick={() => handleSuggestionClick(suggestion)}
+                  >
+                    {suggestion.title}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {searchQuery && (
+              <p className={styles.searchResults}>
+                Found {questions.length} of {allQuestions.length} questions
+              </p>
+            )}
           </div>
-          {searchQuery && (
-            <p className={styles.searchResults}>
-              Found {questions.length} of {allQuestions.length} questions
-            </p>
-          )}
         </section>
 
-        <div className={styles.floatingActions}>
-          <button
-            className={styles.mainAction}
-            onClick={() => navigate('/ask')}
+        {/* Sort by Category */}
+        <section className={styles.sortSection}>
+          <label htmlFor="category" className={styles.sortLabel}>
+            Sort by Category:
+          </label>
+          <select
+            id="category"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className={styles.sortSelect}
           >
-            <span>+</span>
-          </button>
-
-          <div className={styles.secondaryActions}>
-            <button
-              onClick={() => {
-                searchDom.current.focus();
-                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-              }}
-            >
-              🔍
-            </button>
-            <button
-              onClick={() =>
-                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-              }
-            >
-              <IoMdArrowRoundUp size={30} />
-            </button>
-          </div>
-        </div>
+            <option value="">All Categories</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+            <option value="HTML">HTML</option>
+            <option value="CSS">CSS</option>
+            <option value="Bootstrap">Bootstrap</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="jQuery">jQuery</option>
+            <option value="React">React</option>
+            <option value="Node.js">Node.js</option>
+            <option value="MySQL">MySQL</option>
+            <option value="Express">Express</option>
+          </select>
+        </section>
 
         <section className={styles.questionsSection}>
           <div className={styles.sectionHeader}>
@@ -153,7 +183,7 @@ const Home = () => {
             ) : error === 'No questions found' ? (
               <p>{error}</p>
             ) : (
-              questions?.map((question) => {
+              filteredQuestions?.map((question) => {
                 return (
                   <Link
                     to={`/questionDetail/${question.question_id}`}

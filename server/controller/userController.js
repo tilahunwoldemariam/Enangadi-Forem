@@ -47,7 +47,7 @@ async function register(req, res) {
         error: 'Bad Request',
         msg: 'Please, provide full information',
       });
-    }h
+    }
     if (password.length < 8) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         msg: 'password length should be at least 8 character',

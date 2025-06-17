@@ -38,6 +38,7 @@ async function getAllQuestions(req, res) {
       SELECT 
         questions.id AS question_id,
         questions.title,
+        questions.tag,
         questions.description AS content,
         users.username,
         questions.created_at,

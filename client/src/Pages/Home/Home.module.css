@@ -457,3 +457,55 @@ h2 {
   align-items: center;
   justify-content: center;
 }
+
+.suggestionsList {
+  position: absolute; 
+  top: 100%; 
+  left: 0;
+  width: 100%; 
+  z-index: 999; 
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  max-height: 200px; /* Limit the height */
+  overflow-y: auto; /* Enable scrolling for overflow */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.suggestionItem {
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.suggestionItem:hover {
+  background-color: #f0f0f0;
+}
+
+.sortSection {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sortLabel {
+  font-weight: 600;
+  color: #3b455a;
+}
+
+.sortSelect {
+  padding: 0.5rem;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.sortSelect:focus {
+  outline: none;
+  border-color: #516cf0;
+  box-shadow: 0 4px 12px rgba(81, 108, 240, 0.2);
+}
