@@ -44,6 +44,7 @@ const Home = () => {
         const res = await axiosInstance.get('/questions/all-questions', {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log('API Response:', res.data);
         setQuestions(res.data.questions);
         setIsLoading(false);
       } catch (error) {

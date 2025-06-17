@@ -260,3 +260,117 @@
     gap: 1rem;
   }
 }
+
+.deleteButton {
+  background-color: #ff4d4d; /* Red color for delete */
+  color: #fff; /* White text */
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.deleteButton:hover {
+  background-color: #e60000; /* Darker red on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.deleteButton:active {
+  transform: scale(0.95); /* Slight shrink effect on click */
+}
+
+.editTextarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  resize: none;
+}
+
+.editTextarea:focus {
+  outline: none;
+  border-color: #4f6cff;
+  box-shadow: 0 0 5px rgba(81, 108, 240, 0.5);
+}
+
+.editQuestionForm {
+  background-color: #f9f9f9; /* Light background for the editing section */
+  border: 1px solid #ddd; /* Border for the editing section */
+  border-radius: 8px; /* Rounded corners */
+  padding: 1.5rem; /* Padding inside the form */
+  margin-bottom: 1.5rem; /* Space below the form */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.editInput,
+.editTextarea {
+  width: 100%; /* Full width for inputs */
+  padding: 0.5rem; /* Padding inside inputs */
+  border: 1px solid #ccc; /* Border for inputs */
+  border-radius: 5px; /* Rounded corners for inputs */
+  font-size: 1rem; /* Font size for inputs */
+  margin-bottom: 1rem; /* Space between inputs */
+}
+
+.editInput:focus,
+.editTextarea:focus {
+  outline: none; /* Remove default focus outline */
+  border-color: #4f6cff; /* Highlight border on focus */
+  box-shadow: 0 0 5px rgba(81, 108, 240, 0.5); /* Subtle glow on focus */
+}
+
+.saveButton,
+.cancelButton {
+  background-color: #4f6cff; /* Primary button color */
+  color: #fff; /* White text */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 0.5rem 1rem; /* Padding inside buttons */
+  font-size: 1rem; /* Font size for buttons */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.saveButton:hover {
+  background-color: #3b5bcc; /* Darker blue on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.cancelButton {
+  background-color: #ff4d4d; /* Red color for cancel button */
+  margin-left: 1rem; /* Space between buttons */
+}
+
+.cancelButton:hover {
+  background-color: #e60000; /* Darker red on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.editButton {
+  background-color: #4f6cff; /* Primary button color */
+  color: #fff; /* White text */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 0.5rem 1rem; /* Padding inside buttons */
+  font-size: 0.9rem; /* Font size for buttons */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  margin-right: 10px;
+}
+
+.editButton:hover {
+  background-color: #3b5bcc; /* Darker blue on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.editButton:active {
+  transform: scale(0.95); /* Slight shrink effect on click */
+}
+
+.questionActions {
+  margin-top: 10px;
+}

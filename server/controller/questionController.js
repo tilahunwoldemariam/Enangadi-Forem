@@ -39,6 +39,7 @@ async function getAllQuestions(req, res) {
         questions.id AS question_id,
         questions.title,
         questions.tag,
+        questions.userid,
         questions.description AS content,
         users.username,
         questions.created_at,
@@ -75,6 +76,7 @@ async function getSingleQuestion(req, res) {
           questions.id,
           questions.questionid,
           questions.title,
+          questions.userid,
           questions.description AS content,
           questions.tag,
           questions.created_at,
@@ -104,4 +106,95 @@ async function getSingleQuestion(req, res) {
   }
 }
 
-module.exports = { postQuestion, getAllQuestions, getSingleQuestion };
+async function editQuestion(req, res) {
+  const userId = req.user.userid; // Get the logged-in user's ID
+  const questionId = req.params.id; // Get the question ID from the route
+  const { title, description } = req.body; // Get the updated title from the request body
+
+  if (!title || !description) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      error: 'Bad Request',
+      msg: 'Title is required',
+    });
+  }
+
+  try {
+    const [question] = await dbConnection.query(
+      'SELECT userid FROM questions WHERE id = ?',
+      [questionId]
+    );
+
+    if (question.length === 0) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        error: 'Not Found',
+        msg: 'Question not found',
+      });
+    }
+
+    if (question[0].userid !== userId) {
+      return res.status(StatusCodes.FORBIDDEN).json({
+        error: 'Forbidden',
+        msg: 'You are not authorized to edit this question',
+      });
+    }
+
+    await dbConnection.query(
+      'UPDATE questions SET title = ?, description = ? WHERE id = ?',
+      [title, description, questionId]
+    );
+
+    res.status(StatusCodes.OK).json({ msg: 'Question updated successfully' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: 'Internal Server Error',
+      msg: 'An unexpected error occurred',
+    });
+  }
+}
+
+async function deleteQuestion(req, res) {
+  const userId = req.user.userid; // Get the logged-in user's ID
+  const questionId = req.params.id; // Get the question ID from the route
+
+  try {
+    const [question] = await dbConnection.query(
+      'SELECT userid FROM questions WHERE id = ?',
+      [questionId]
+    );
+
+    if (question.length === 0) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        error: 'Not Found',
+        msg: 'Question not found',
+      });
+    }
+
+    if (question[0].userid !== userId) {
+      return res.status(StatusCodes.FORBIDDEN).json({
+        error: 'Forbidden',
+        msg: 'You are not authorized to delete this question',
+      });
+    }
+
+    await dbConnection.query('DELETE FROM questions WHERE id = ?', [
+      questionId,
+    ]);
+
+    res.status(StatusCodes.OK).json({ msg: 'Question deleted successfully' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: 'Internal Server Error',
+      msg: 'An unexpected error occurred',
+    });
+  }
+}
+
+module.exports = {
+  postQuestion,
+  getAllQuestions,
+  getSingleQuestion,
+  editQuestion,
+  deleteQuestion,
+};

@@ -94,7 +94,7 @@ function Login({
 
       toast.success(res.data.msg);
       setIsLoading(false);
-      navigate('/'); // Redirect to home page after successful login
+      navigate('/', { replace: true }); // Redirect to home page after successful login
     } catch (error) {
       console.error('Error during Login:', error);
       toast.error(error?.response?.data?.msg);
