@@ -180,4 +180,160 @@ async function voteAnswer(req, res) {
   }
 }
 
-module.exports = { postAnswers, getAllAnswer, deleteAnswer, voteAnswer };
+async function editAnswer(req, res) {
+  const userId = req.user.userid; // Get the logged-in user's ID
+  const answerId = req.params.id; // Get the answer ID from the route
+  const { content } = req.body; // Get the new content for the answer
+
+  if (!content || !content.trim()) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      error: 'Bad Request',
+      msg: 'Answer content cannot be empty',
+    });
+  }
+
+  try {
+    // Check if the answer exists and belongs to the logged-in user
+    const [answer] = await dbConnection.query(
+      'SELECT userid FROM answers WHERE answerid = ?',
+      [answerId]
+    );
+
+    if (answer.length === 0) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        error: 'Not Found',
+        msg: 'Answer not found',
+      });
+    }
+
+    if (answer[0].userid !== userId) {
+      return res.status(StatusCodes.FORBIDDEN).json({
+        error: 'Forbidden',
+        msg: 'You are not authorized to edit this answer',
+      });
+    }
+
+    // Update the answer content
+    await dbConnection.query(
+      'UPDATE answers SET answer = ? WHERE answerid = ?',
+      [content, answerId]
+    );
+
+    res.status(StatusCodes.OK).json({
+      msg: 'Answer updated successfully',
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: 'Internal Server Error',
+      msg: 'An unexpected error occurred',
+    });
+  }
+}
+
+// Add a comment to an answer
+async function addComment(req, res) {
+  const userId = req.user.userid; // Get the logged-in user's ID
+  const answerId = req.params.answerId; // Get the answer ID from the route
+  const { content } = req.body; // Get the comment content
+
+  if (!content || !content.trim()) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      error: 'Bad Request',
+      msg: 'Comment content cannot be empty',
+    });
+  }
+
+  try {
+    await dbConnection.query(
+      'INSERT INTO comments (answerid, userid, content) VALUES (?, ?, ?)',
+      [answerId, userId, content]
+    );
+
+    res.status(StatusCodes.CREATED).json({
+      msg: 'Comment added successfully',
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: 'Internal Server Error',
+      msg: 'An unexpected error occurred',
+    });
+  }
+}
+
+// Get all comments for an answer
+async function getComments(req, res) {
+  const answerId = req.params.answerId; // Get the answer ID from the route
+
+  try {
+    const [comments] = await dbConnection.query(
+      `SELECT 
+        comments.commentid,
+        comments.content,
+        comments.created_at,
+        users.username,
+        users.userid
+      FROM comments
+      JOIN users ON comments.userid = users.userid
+      WHERE comments.answerid = ?`,
+      [answerId]
+    );
+
+    res.status(StatusCodes.OK).json({ comments });
+  } catch (error) {
+    console.error(error.message);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: 'Internal Server Error',
+      msg: 'An unexpected error occurred',
+    });
+  }
+}
+
+// Delete a comment
+async function deleteComment(req, res) {
+  const userId = req.user.userid; // Get the logged-in user's ID
+  const commentId = req.params.commentId; // Get the comment ID from the route
+
+  try {
+    const [comment] = await dbConnection.query(
+      'SELECT userid FROM comments WHERE commentid = ?',
+      [commentId]
+    );
+
+    if (comment.length === 0) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        error: 'Not Found',
+        msg: 'Comment not found',
+      });
+    }
+
+    if (comment[0].userid !== userId) {
+      return res.status(StatusCodes.FORBIDDEN).json({
+        error: 'Forbidden',
+        msg: 'You are not authorized to delete this comment',
+      });
+    }
+
+    await dbConnection.query('DELETE FROM comments WHERE commentid = ?', [commentId]);
+
+    res.status(StatusCodes.OK).json({ msg: 'Comment deleted successfully' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: 'Internal Server Error',
+      msg: 'An unexpected error occurred',
+    });
+  }
+}
+
+module.exports = {
+  postAnswers,
+  getAllAnswer,
+  deleteAnswer,
+  voteAnswer,
+  editAnswer,
+  addComment,
+  getComments,
+  deleteComment,
+};

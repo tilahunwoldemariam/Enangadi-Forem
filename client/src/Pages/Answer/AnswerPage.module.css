@@ -403,3 +403,79 @@
   background-color: #f8d7da; /* Highlight for active dislike */
   border: 1px solid #dc3545; /* Red border for active dislike */
 }
+
+/* Comments Section */
+.commentsSection {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.commentsSection h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.commentsSection ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.commentsSection ul li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.commentsSection ul li:last-child {
+  border-bottom: none;
+}
+
+.commentsSection ul li span {
+  font-size: 14px;
+  color: #333;
+}
+
+.deleteCommentButton {
+  background-color: #ff4d4d;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.deleteCommentButton:hover {
+  background-color: #e60000;
+}
+
+.commentInput {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.addCommentButton {
+  margin-top: 10px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.addCommentButton:hover {
+  background-color: #45a049;
+}
