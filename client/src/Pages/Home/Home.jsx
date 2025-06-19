@@ -25,6 +25,8 @@ const Home = () => {
   const [hasMore, setHasMore] = useState(false); // Track if there are more questions to load
   const [hasLess, setHasLess] = useState(false); // Track if there are fewer questions to show
 
+  const navigate = useNavigate();
+
   const {
     suggestions,
     questions,
@@ -158,6 +160,33 @@ const Home = () => {
             )}
           </div>
         </section>
+
+        <div className={styles.floatingActions}>
+          <button
+            className={styles.mainAction}
+            onClick={() => navigate('/ask')}
+          >
+            <span>+</span>
+          </button>
+
+          <div className={styles.secondaryActions}>
+            <button
+              onClick={() => {
+                searchDom.current.focus();
+                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+              }}
+            >
+              🔍
+            </button>
+            <button
+              onClick={() =>
+                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+              }
+            >
+              <IoMdArrowRoundUp size={30} />
+            </button>
+          </div>
+        </div>
 
         {/* Sort by Category */}
         <section className={styles.sortSection}>
