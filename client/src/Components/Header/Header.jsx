@@ -7,7 +7,6 @@ import { useContext } from 'react';
 import { AuthContext } from '../../Context/Context';
 import { Type } from '../../Utility/actionType';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 const Header = () => {
   const [{ user }, dispatch] = useContext(AuthContext);
