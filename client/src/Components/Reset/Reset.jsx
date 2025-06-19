@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 import styles from '../../pages/Auth/Auth.module.css';
 import axiosInstance from '../../Api/axiosConfig';
 import { Link } from 'react-router-dom';
-import { FaEye, FaEyeSlash } from 'react-icons/fa6';
 import { toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
 
@@ -14,69 +13,37 @@ function Reset({
   setLogInDisplay,
   emptyFields,
   loginPage,
-  registerPage
+  registerPage,
 }) {
-  // State to manage password visibility
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   // Ref for email input field in reset form
   const emailDom3 = useRef(null);
 
-  const passwordDom3 = useRef();
-
-  async function handlePasswordReset(e) {
+  async function handlePasswordResetRequest(e) {
     e.preventDefault();
     setErrors('');
     const email = emailDom3.current.value.trim();
-    const password = passwordDom3.current.value.trim();
 
     // Check for empty fields
-    const newEmptyFields = {};
-    if (!email) newEmptyFields.email = true;
-    if (!password) newEmptyFields.password = true;
-    
-    if (Object.keys(newEmptyFields).length > 0) {
-      setEmptyFields(newEmptyFields);
-      setErrors('All fields are required.');
-      toast.error('All fields are required.');
-
-      // Clear emptyFields after 2 seconds
-      setTimeout(() => {
-        setEmptyFields({
-          email: false,
-          password: false,
-        });
-      }, 2000);
-      return;
-    }
-
-    if (!email || !password) {
-      setErrors('Please fill in all fields.');
-      toast.error('Please fill in all fields.');
-      return;
-    }
-
-    if (password.length < 8) {
-      toast.error('Password must be at least 8 characters.');
-      setErrors('Password must be at least 8 characters.');
+    if (!email) {
+      setEmptyFields({ email: true });
+      setErrors('Email is required.');
+      toast.error('Email is required.');
       return;
     }
 
     try {
       setIsLoading(true);
-      await axiosInstance.post('/users/reset-password', {
-        email,
-        newPassword: password,
-      });
-      toast.success('Password reset successfully. You can now log in.');
+      await axiosInstance.post('/users/reset-password', { email });
+      toast.success('Password reset link sent to your email.');
       setIsLoading(false);
-      setResetPage(styles.display); // hide reset page
-      setLogInDisplay(''); // show login page
+      setResetPage(styles.display); // Hide reset page
+      setLogInDisplay(''); // Show login page
     } catch (error) {
       console.error('Password reset error:', error);
       setErrors(
-        error?.response?.data?.msg || 'Error resetting password. Try again.'
+        error?.response?.data?.msg || 'Error sending reset link. Try again.'
       );
       setIsLoading(false);
     }
@@ -87,10 +54,10 @@ function Reset({
       <h4 className={styles.reset_title}>Reset your password</h4>
 
       <p className={styles.reset__desc}>
-        Enter your email and new password below to reset it.
+        Enter your email below to receive a password reset link.
       </p>
 
-      <form onSubmit={handlePasswordReset}>
+      <form onSubmit={handlePasswordResetRequest}>
         <input
           ref={emailDom3}
           type="email"
@@ -102,33 +69,8 @@ function Reset({
           placeholder="Email address"
         />
 
-        <div className={styles.resetPassInput}>
-          <input
-            ref={passwordDom3}
-            type={showPassword ? 'text' : 'password'}
-            className={`${styles.email_input} ${
-              emptyFields.password ? styles.error_bg : ''
-            }`}
-            onChange={() =>
-              setEmptyFields((prev) => ({ ...prev, password: false }))
-            }
-            name="newpassword"
-            placeholder="New password"
-          />
-          <div
-            className={styles.resetPassShow}
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? (
-              <FaEye color="gray" />
-            ) : (
-              <FaEyeSlash color="gray" />
-            )}
-          </div>
-        </div>
-
         <button className={`${styles.butn_login} butn_login`} type="submit">
-          {isLoading ? <ClipLoader color='#fff'  /> : 'Reset your password'}
+          {isLoading ? <ClipLoader color="#fff" /> : 'Send Reset Link'}
         </button>
       </form>
 
