@@ -134,7 +134,7 @@ async function checkUser(req, res) {
     .json({ msg: 'User is authenticated', username, userid });
 }
 
-// Reset password without token — just with email
+// Reset password
 async function resetPassword(req, res) {
   const { email } = req.body;
 
@@ -172,10 +172,10 @@ async function resetPassword(req, res) {
 
     // Send email with reset link
     const transporter = nodemailer.createTransport({
-      service: 'Gmail', // Use your email provider
+      service: 'Gmail',
       auth: {
-        user: process.env.EMAIL_USER, // Your email address
-        pass: process.env.EMAIL_PASSWORD, // Your email password
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD, 
       },
     });
 
@@ -185,8 +185,8 @@ async function resetPassword(req, res) {
       to: email,
       subject: 'Password Reset Request',
       html: `<p>You requested a password reset. Click the link below to reset your password:</p>
-             <a href="${resetLink}" target="_blank">${resetLink}</a>
-             <p>If you did not request this, please ignore this email.</p>`,
+              <a href="${resetLink}" target="_blank">${resetLink}</a>
+              <p>If you did not request this, please ignore this email.</p>`,
     };
 
     await transporter.sendMail(mailOptions);
