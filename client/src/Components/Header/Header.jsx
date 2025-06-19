@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import styles from './Header.module.css';
 import logo from '../../asset/images/header_logo.png';
@@ -11,11 +12,10 @@ import { Link, useNavigate } from 'react-router-dom';
 const Header = () => {
   const [{ user }, dispatch] = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
-
-  const navigate = useNavigate();
 
   const onSignOut = () => {
     localStorage.removeItem('user');
@@ -26,9 +26,43 @@ const Header = () => {
     navigate('/login');
   };
 
+  const NavLinks = ({ isMobile }) => (
+    <>
+      <Link
+        to={user ? "/" : "/login"}
+        onClick={isMobile ? closeMenu : ""}
+      >
+        Home
+      </Link>
+      <Link to="/how-it-works" onClick={isMobile ? closeMenu : ""}>
+        How it works
+      </Link>
+      {user ? (
+        <Link
+          onClick={() => {
+            onSignOut();
+            if (isMobile) closeMenu();
+          }}
+        
+          className={`${styles.showMenu} ${!isMobile ? styles.btn : ""}`}
+        >
+          LOG OUT
+        </Link>
+      ) : (
+        <Link
+          to="/login"
+          onClick={isMobile ? closeMenu : ""}
+          className={`${styles.showMenu} ${!isMobile ? styles.btn : ""}`}
+        >
+          SIGN IN
+        </Link>
+      )}
+    </>
+  );
+
   return (
     <header className={styles.header}>
-      <Link to={user ? '/' : '/login'} className={styles.logo}>
+      <Link to={user ? "/" : "/login"} className={styles.logo}>
         <img src={logo} alt="evangadi_logo" />
       </Link>
 
@@ -36,56 +70,22 @@ const Header = () => {
         <FaBarsStaggered color="#FF8500" />
       </button>
 
+      {/* Mobile Nav */}
       <nav
-        className={`${styles.mobileMenu} ${isMenuOpen ? styles.showMenu : ''}`}
+        className={`${styles.mobileMenu} ${isMenuOpen ? styles.showMenu : ""}`}
       >
         <button className={styles.closeButton} onClick={closeMenu}>
           <IoCloseSharp size={30} />
         </button>
-        <Link to={user ? '/' : '/login'} className={styles.mobile_logo}>
-          <img src={logo} alt="" />
+        <Link to={user ? "/" : "/login"} className={styles.mobile_logo}>
+          <img src={logo} alt="evangadi_logo" />
         </Link>
-
-        <Link to={user ? '/' : '/login'} onClick={closeMenu}>
-          Home
-        </Link>
-        <Link to="/how-it-works" onClick={closeMenu}>
-          How it works
-        </Link>
-
-        {user ? (
-          <Link
-            onClick={() => {
-              onSignOut();
-              closeMenu();
-            }}
-            className={styles.btn}
-          >
-            Log out
-          </Link>
-        ) : (
-          <Link to="/login" onClick={closeMenu} className={styles.btn}>
-            sign In
-          </Link>
-        )}
+        <NavLinks isMobile />
       </nav>
 
+      {/* Desktop Nav */}
       <div className={styles.nav_links}>
-        <Link to={user ? '/' : '/login'}>Home</Link>
-        <Link to="/how-it-works">How it works</Link>
-        <div className={styles.auth_button}>
-          {user ? (
-            <button onClick={onSignOut} className={styles.btn}>
-              LOG OUT
-            </button>
-          ) : (
-            <button className={styles.btn}>
-              <Link to="/login" style={{ color: '#fff' }}>
-                SIGN IN
-              </Link>
-            </button>
-          )}
-        </div>
+        <NavLinks />
       </div>
     </header>
   );
