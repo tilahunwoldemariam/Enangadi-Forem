@@ -45,7 +45,7 @@ const Home = () => {
       setIsLoading(true);
       try {
         const res = await axiosInstance.get('/questions/all-questions', {
-          params: { page, limit: 10 }, // Pass page and limit as query parameters
+          params: { page, limit: 20 }, // Pass page and limit as query parameters
           headers: { Authorization: `Bearer ${token}` },
         });
         setHasMore(res.data.questions.length > 0); // Check if there are more questions to load

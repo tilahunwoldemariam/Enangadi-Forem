@@ -92,7 +92,6 @@ function Login({
         },
       });
 
-      toast.success(res.data.msg);
       setIsLoading(false);
       navigate('/', { replace: true }); // Redirect to home page after successful login
     } catch (error) {

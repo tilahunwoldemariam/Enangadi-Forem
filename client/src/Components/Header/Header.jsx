@@ -24,7 +24,6 @@ const Header = () => {
     dispatch({
       type: Type.REMOVE_USER,
     });
-    toast.success('User Logged out successfully');
     navigate('/login');
   };
 
