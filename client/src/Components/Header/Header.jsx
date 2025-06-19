@@ -1,12 +1,13 @@
-import React, { useState, useContext } from "react";
-import styles from "./Header.module.css";
-import logo from "../../asset/images/header_logo.png";
-import { IoCloseSharp } from "react-icons/io5";
-import { FaBarsStaggered } from "react-icons/fa6";
-import { AuthContext } from "../../Context/Context";
-import { Type } from "../../Utility/actionType";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+
+import React, { useState } from 'react';
+import styles from './Header.module.css';
+import logo from '../../asset/images/header_logo.png';
+import { IoCloseSharp } from 'react-icons/io5';
+import { FaBarsStaggered } from 'react-icons/fa6';
+import { useContext } from 'react';
+import { AuthContext } from '../../Context/Context';
+import { Type } from '../../Utility/actionType';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [{ user }, dispatch] = useContext(AuthContext);
@@ -17,11 +18,12 @@ const Header = () => {
   const closeMenu = () => setIsMenuOpen(false);
 
   const onSignOut = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    dispatch({ type: Type.REMOVE_USER });
-    toast.success("User Logged out successfully");
-    navigate("/login");
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    dispatch({
+      type: Type.REMOVE_USER,
+    });
+    navigate('/login');
   };
 
   const NavLinks = ({ isMobile }) => (

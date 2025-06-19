@@ -3,6 +3,8 @@ const dbConnection = require('../db/dbConfig');
 const { StatusCodes } = require('http-status-codes');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
 async function register(req, res) {
   // Logic for user registration
@@ -132,19 +134,13 @@ async function checkUser(req, res) {
     .json({ msg: 'User is authenticated', username, userid });
 }
 
-// Reset password without token — just with email
+// Reset password
 async function resetPassword(req, res) {
-  const { email, newPassword } = req.body;
+  const { email } = req.body;
 
-  if (!email || !newPassword) {
+  if (!email) {
     return res.status(StatusCodes.BAD_REQUEST).json({
-      msg: 'Please provide email and new password',
-    });
-  }
-
-  if (newPassword.length < 8) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      msg: 'Password should be at least 8 characters',
+      msg: 'Please provide an email address',
     });
   }
 
@@ -160,13 +156,88 @@ async function resetPassword(req, res) {
       });
     }
 
+    // Generate a reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    // Save the hashed token and expiration time in the database
+    const expirationTime = new Date(Date.now() + 3600000); // Token valid for 1 hour
+    await dbConnection.query(
+      'UPDATE users SET reset_token = ?, reset_token_expiration = ? WHERE email = ?',
+      [hashedToken, expirationTime, email]
+    );
+
+    // Send email with reset link
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD, 
+      },
+    });
+
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Password Reset Request',
+      html: `<p>You requested a password reset. Click the link below to reset your password:</p>
+              <a href="${resetLink}" target="_blank">${resetLink}</a>
+              <p>If you did not request this, please ignore this email.</p>`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return res.status(StatusCodes.OK).json({
+      msg: 'Password reset link sent to your email',
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      msg: 'Server error',
+    });
+  }
+}
+
+async function verifyResetToken(req, res) {
+  const { token, newPassword } = req.body;
+
+  if (!token || !newPassword) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      msg: 'Please provide a valid token and new password',
+    });
+  }
+
+  if (newPassword.length < 8) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      msg: 'Password should be at least 8 characters',
+    });
+  }
+
+  try {
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    const [user] = await dbConnection.query(
+      'SELECT * FROM users WHERE reset_token = ? AND reset_token_expiration > ?',
+      [hashedToken, new Date()]
+    );
+
+    if (user.length === 0) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        msg: 'Invalid or expired reset token',
+      });
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    await dbConnection.query('UPDATE users SET password = ? WHERE email = ?', [
-      hashedPassword,
-      email,
-    ]);
+    await dbConnection.query(
+      'UPDATE users SET password = ?, reset_token = NULL, reset_token_expiration = NULL WHERE reset_token = ?',
+      [hashedPassword, hashedToken]
+    );
 
     return res.status(StatusCodes.OK).json({
       msg: 'Password updated successfully',
@@ -179,27 +250,4 @@ async function resetPassword(req, res) {
   }
 }
 
-async function getUserProfile(req, res) {
-  const userId = req.user.userid;
-
-  try {
-    const [questions] = await dbConnection.query(
-      'SELECT * FROM questions WHERE userid = ?',
-      [userId]
-    );
-    const [answers] = await dbConnection.query(
-      'SELECT * FROM answers WHERE userid = ?',
-      [userId]
-    );
-
-    res.status(StatusCodes.OK).json({ questions, answers });
-  } catch (error) {
-    console.error(error.message);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      error: 'Internal Server Error',
-      msg: 'An unexpected error occurred',
-    });
-  }
-}
-
-module.exports = { register, loginUser, checkUser, resetPassword, getUserProfile };
+module.exports = { register, loginUser, checkUser, resetPassword, verifyResetToken };

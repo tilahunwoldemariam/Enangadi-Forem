@@ -7,6 +7,7 @@ const {
   loginUser,
   checkUser,
   resetPassword,
+  verifyResetToken,
 } = require('../controller/userController');
 const authMiddleware = require('../middleware/authMiddleware');
 
@@ -22,7 +23,7 @@ router.get('/check', authMiddleware, checkUser);
 // password reset
 router.post('/reset-password', resetPassword);
 
-// user profile
-// router.get('/profile/:userid', authMiddleware, getUserProfile);
+// Verify reset token and update password
+router.post('/verify-reset-token', verifyResetToken);
 
 module.exports = router;

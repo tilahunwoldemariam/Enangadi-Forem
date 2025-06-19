@@ -30,3 +30,13 @@ CREATE TABLE IF NOT EXISTS answers (
   FOREIGN KEY(questionid) REFERENCES questions(questionid),
   FOREIGN KEY(userid) REFERENCES users(userId)
 );
+
+CREATE TABLE comments (
+  commentid INT AUTO_INCREMENT PRIMARY KEY,
+  answerid INT NOT NULL,
+  userid INT NOT NULL,
+  content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (answerid) REFERENCES answers(answerid),
+  FOREIGN KEY (userid) REFERENCES users(userid)
+);

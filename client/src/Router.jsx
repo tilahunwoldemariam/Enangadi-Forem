@@ -8,6 +8,7 @@ import Howitworks from './pages/Howitworks/Howitworks';
 import Auth from './pages/Auth/Auth';
 import Four04 from './Pages/Four04/Four04';
 import Loader from './Components/Loader/Loader';
+import ResetPassword from './Pages/ResetPassword/ResetPassword';
 
 function Router() {
   const [{ user }] = useContext(AuthContext);
@@ -53,6 +54,7 @@ function Router() {
         path="/questionDetail/:questionid"
         element={user ? <AnswerPage /> : <Navigate to="/login" replace />}
       />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="*" element={<Four04 />} />
     </Routes>
   );
