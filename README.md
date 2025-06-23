@@ -5,6 +5,7 @@ A Q&A platform similar to Stack Overflow, built with a team of 13 developers.
 ## Project Structure
 - **Backend**: MySQL, Node.js/Express
 - **Frontend**: React
+#
 
 ## Team Assignments
 
